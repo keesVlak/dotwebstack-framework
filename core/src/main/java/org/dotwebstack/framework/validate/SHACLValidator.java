@@ -41,8 +41,57 @@ public class SHACLValidator implements Validator<Resource, Model> {
   }
 
   @Override
-  public void validate(Resource data, Resource shapes) throws SHACLValdiationException {
+  public void getValidationReport(Model reportModel) throws SHACLValdiationException {
+    NodeIterator validatorResult = reportModel.listObjects();
+    StmtIterator iterator = reportModel.listStatements();
 
+    Boolean isValid = false;
+    String resultPath = "";
+    String resultMessage = "";
+    String focusNode = "";
+
+    while (iterator.hasNext()) {
+      Statement statement = iterator.nextStatement();
+      Property predicate = statement.getPredicate();
+      RDFNode object = statement.getObject();
+
+      if (predicate.getLocalName().equals("conforms")) {
+        if (object instanceof Literal) {
+          Literal literal = object.asLiteral();
+          isValid = literal.getBoolean();
+        }
+      }
+      if (predicate.getLocalName().equals("resultPath")) {
+        if (object instanceof org.apache.jena.rdf.model.Resource) {
+          org.apache.jena.rdf.model.Resource resource = object.asResource();
+          resultPath = resource.toString();
+        }
+      }
+      if (predicate.getLocalName().equals("resultMessage")) {
+        if (object instanceof Literal) {
+          Literal literal = object.asLiteral();
+          resultMessage = literal.getString();
+        }
+      }
+      if (predicate.getLocalName().equals("focusNode")) {
+        if (object instanceof RDFNode) {
+          RDFNode rdfNode = (RDFNode) object;
+          focusNode = rdfNode.toString();
+        }
+      }
+    }
+    if (!isValid) {
+      LOG.error(String
+          .format("Invalid configuration at path [%s] on node [%s] with error message [%s]",
+              resultPath, focusNode, resultMessage));
+      throw new SHACLValdiationException(String
+          .format("Invalid configuration at path [%s] on node [%s] with error message [%s]",
+              resultPath, focusNode, resultMessage));
+    }
+  }
+
+  @Override
+  public void validate(Resource data, Resource shapes) throws SHACLValdiationException {
     try {
       Model dataShape = JenaUtil.createMemoryModel();
       dataShape.read(shapes.getInputStream(), "", FileUtils.langTurtle);
