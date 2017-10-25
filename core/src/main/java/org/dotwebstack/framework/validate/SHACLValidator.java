@@ -93,38 +93,19 @@ public class SHACLValidator implements Validator<Resource, Model> {
   @Override
   public void validate(Resource data, Resource shapes) throws SHACLValdiationException {
     try {
-      Model dataShape = JenaUtil.createMemoryModel();
-      dataShape.read(shapes.getInputStream(), "", FileUtils.langTurtle);
+      Model dataModel = transformTrigFileToModel(data);
 
-      Model dataModel = JenaUtil.createMemoryModel();
-      dataModel.read(data.getInputStream(), "", FileUtils.langTurtle);
+      Model dataShape = transformTrigFileToModel(shapes);
+     /* dataShape.read(shapes.getInputStream(), "", FileUtils.langTurtle);*/
 
       org.apache.jena.rdf.model.Resource report = ValidationUtil
           .validateModel(dataModel, dataShape, true);
-      NodeIterator validatorResult = report.getModel().listObjects();
-      // list the statements in the Model
-      StmtIterator iterator = report.getModel().listStatements();
-      while (iterator.hasNext()) {
-        Statement statement = iterator.nextStatement();
-        Property predicate = statement.getPredicate();
-        RDFNode object = statement.getObject();
 
-        if (predicate.getLocalName().equals("conforms")) {
-          if (object instanceof Literal) {
-            Literal literal = object.asLiteral();
-            Boolean isValid = literal.getBoolean();
-            if (!isValid) {
-              System.out.println("SHACL error report: " + report.getModel().toString());
-              LOG.error("SHACL error report: " + report.getModel().toString());
-              throw new SHACLValdiationException("Invalid SHACL :(");
-            } else {
-              break;
-            }
-          }
-        }
-      }
+      getValidationReport(report.getModel());
     } catch (IOException e) {
-      e.printStackTrace();
+      LOG.error("File could not read during the validation process");
+      LOG.error(e.toString());
+      throw new SHACLValdiationException("File could not read during the validation process", e);
     }
   }
 }
