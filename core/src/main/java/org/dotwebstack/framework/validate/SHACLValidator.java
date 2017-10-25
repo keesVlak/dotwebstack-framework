@@ -25,6 +25,21 @@ public class SHACLValidator implements Validator<Resource, Model> {
 
   private static final Logger LOG = LoggerFactory.getLogger(SHACLValidator.class);
 
+  private Model transformTrigFileToModel(Resource trigFile) throws IOException {
+    ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+
+    RDFWriter turtleWriter = Rio.createWriter(RDFFormat.TURTLE, byteArrayOutputStream);
+    RDFParser trigParser = Rio.createParser(RDFFormat.TRIG);
+
+    trigParser.setRDFHandler(turtleWriter);
+    trigParser.parse(trigFile.getInputStream(), trigFile.getFile().getAbsolutePath());
+
+    Model model = JenaUtil.createMemoryModel();
+    model.read(new ByteArrayInputStream(byteArrayOutputStream.toByteArray()), "",
+        FileUtils.langTurtle);
+    return model;
+  }
+
   @Override
   public void validate(Resource data, Resource shapes) throws SHACLValdiationException {
 
