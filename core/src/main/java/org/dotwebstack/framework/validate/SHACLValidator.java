@@ -21,7 +21,7 @@ import org.springframework.core.io.Resource;
 import org.topbraid.shacl.validation.ValidationUtil;
 import org.topbraid.spin.util.JenaUtil;
 
-public class SHACLValidator implements Validator<Resource> {
+public class SHACLValidator implements Validator<Resource, Model> {
 
   private static final Logger LOG = LoggerFactory.getLogger(SHACLValidator.class);
 
