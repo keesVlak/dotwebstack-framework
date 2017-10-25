@@ -66,7 +66,7 @@ public class SHACLValitdatorTest {
       + "\t]\n"
       + ".";
 
-  private SHACLValidator shaclValidator;
+  private ShaclValidator shaclValidator;
 
   @Mock
   private Resource dataResource;
@@ -76,7 +76,7 @@ public class SHACLValitdatorTest {
 
   @Before
   public void setUp() throws Exception {
-    shaclValidator = new SHACLValidator();
+    shaclValidator = new ShaclValidator();
     dataResource = mock(Resource.class);
     shapesResource = mock(Resource.class);
     final File dummyFile = mock(File.class);
@@ -152,7 +152,7 @@ public class SHACLValitdatorTest {
         dataContent.getBytes(StandardCharsets.UTF_8)));
 
     // Assert
-    thrown.expect(SHACLValdiationException.class);
+    thrown.expect(ShaclValdiationException.class);
 
     // Act
     shaclValidator.validate(dataResource, shapesResource);
@@ -164,7 +164,7 @@ public class SHACLValitdatorTest {
     when(dataResource.getFile()).thenThrow(IOException.class);
 
     // Assert
-    thrown.expect(SHACLValdiationException.class);
+    thrown.expect(ShaclValdiationException.class);
     thrown.expectMessage("File could not read during the validation process");
 
     // Act

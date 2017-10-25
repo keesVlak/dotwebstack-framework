@@ -5,7 +5,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import org.apache.jena.rdf.model.Literal;
 import org.apache.jena.rdf.model.Model;
-import org.apache.jena.rdf.model.NodeIterator;
 import org.apache.jena.rdf.model.Property;
 import org.apache.jena.rdf.model.RDFNode;
 import org.apache.jena.rdf.model.Statement;
@@ -21,9 +20,9 @@ import org.springframework.core.io.Resource;
 import org.topbraid.shacl.validation.ValidationUtil;
 import org.topbraid.spin.util.JenaUtil;
 
-public class SHACLValidator implements Validator<Resource, Model> {
+public class ShaclValidator implements Validator<Resource, Model> {
 
-  private static final Logger LOG = LoggerFactory.getLogger(SHACLValidator.class);
+  private static final Logger LOG = LoggerFactory.getLogger(ShaclValidator.class);
 
   private Model transformTrigFileToModel(Resource trigFile) throws IOException {
     ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
@@ -41,8 +40,7 @@ public class SHACLValidator implements Validator<Resource, Model> {
   }
 
   @Override
-  public void getValidationReport(Model reportModel) throws SHACLValdiationException {
-    NodeIterator validatorResult = reportModel.listObjects();
+  public void getValidationReport(Model reportModel) throws ShaclValdiationException {
     StmtIterator iterator = reportModel.listStatements();
 
     Boolean isValid = false;
@@ -55,48 +53,37 @@ public class SHACLValidator implements Validator<Resource, Model> {
       Property predicate = statement.getPredicate();
       RDFNode object = statement.getObject();
 
-      if (predicate.getLocalName().equals("conforms")) {
-        if (object instanceof Literal) {
-          Literal literal = object.asLiteral();
-          isValid = literal.getBoolean();
-        }
+      if (predicate.getLocalName().equals("conforms") && object instanceof Literal) {
+        Literal literal = object.asLiteral();
+        isValid = literal.getBoolean();
       }
-      if (predicate.getLocalName().equals("resultPath")) {
-        if (object instanceof org.apache.jena.rdf.model.Resource) {
-          org.apache.jena.rdf.model.Resource resource = object.asResource();
-          resultPath = resource.toString();
-        }
+      if (predicate.getLocalName().equals("resultPath")
+          && object instanceof org.apache.jena.rdf.model.Resource) {
+        org.apache.jena.rdf.model.Resource resource = object.asResource();
+        resultPath = resource.toString();
       }
-      if (predicate.getLocalName().equals("resultMessage")) {
-        if (object instanceof Literal) {
-          Literal literal = object.asLiteral();
-          resultMessage = literal.getString();
-        }
+      if (predicate.getLocalName().equals("resultMessage") && object instanceof Literal) {
+        Literal literal = object.asLiteral();
+        resultMessage = literal.getString();
       }
-      if (predicate.getLocalName().equals("focusNode")) {
-        if (object instanceof RDFNode) {
-          RDFNode rdfNode = (RDFNode) object;
-          focusNode = rdfNode.toString();
-        }
+      if (predicate.getLocalName().equals("focusNode") && object instanceof RDFNode) {
+        RDFNode rdfNode = object;
+        focusNode = rdfNode.toString();
+        break;
       }
     }
     if (!isValid) {
-      LOG.error(String
-          .format("Invalid configuration at path [%s] on node [%s] with error message [%s]",
-              resultPath, focusNode, resultMessage));
-      throw new SHACLValdiationException(String
+      throw new ShaclValdiationException(String
           .format("Invalid configuration at path [%s] on node [%s] with error message [%s]",
               resultPath, focusNode, resultMessage));
     }
   }
 
   @Override
-  public void validate(Resource data, Resource shapes) throws SHACLValdiationException {
+  public void validate(Resource data, Resource shapes) throws ShaclValdiationException {
     try {
       Model dataModel = transformTrigFileToModel(data);
-
       Model dataShape = transformTrigFileToModel(shapes);
-     /* dataShape.read(shapes.getInputStream(), "", FileUtils.langTurtle);*/
 
       org.apache.jena.rdf.model.Resource report = ValidationUtil
           .validateModel(dataModel, dataShape, true);
@@ -105,7 +92,7 @@ public class SHACLValidator implements Validator<Resource, Model> {
     } catch (IOException e) {
       LOG.error("File could not read during the validation process");
       LOG.error(e.toString());
-      throw new SHACLValdiationException("File could not read during the validation process", e);
+      throw new ShaclValdiationException("File could not read during the validation process", e);
     }
   }
 }
