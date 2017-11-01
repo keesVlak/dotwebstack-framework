@@ -100,10 +100,12 @@ public class FileConfigurationBackend
     List<Resource> resources = getCombinedResources(projectResources);
 
     final Optional<Resource> optionalPrefixesResource = getPrefixesResource(resources);
+    Resource prefixesResource = null;
     if (optionalPrefixesResource.isPresent()) {
-      checkMultiplePrefixesDeclaration(optionalPrefixesResource.get());
+      prefixesResource = optionalPrefixesResource.get();
+      checkMultiplePrefixesDeclaration(prefixesResource);
     }
-
+    List<InputStream> configurationStreams = new ArrayList<>();
     try {
       for (Resource resource : resources) {
         String extension = FilenameUtils.getExtension(resource.getFilename());
@@ -112,9 +114,11 @@ public class FileConfigurationBackend
           LOG.debug("File extension not supported, ignoring file: \"{}\"", resource.getFilename());
           continue;
         }
+        configurationStreams.add(resource.getInputStream());
         if (optionalPrefixesResource.isPresent()) {
           try (SequenceInputStream resourceSquenceInputStream = new SequenceInputStream(
               optionalPrefixesResource.get().getInputStream(), resource.getInputStream())) {
+
             repositoryConnection.add(
                 new EnvironmentAwareResource(resourceSquenceInputStream, environment)
                     .getInputStream(), "#", FileFormats.getFormat(extension));
@@ -126,7 +130,17 @@ public class FileConfigurationBackend
         }
         LOG.info("Loaded configuration file: \"{}\"", resource.getFilename());
       }
-    } catch (RDF4JException e) {
+      configurationStreams.add(elmoConfiguration.getInputStream());
+      if (configurationStreams.size() > 1) {
+        try (InputStream stream = new SequenceInputStream(
+            Collections.enumeration(configurationStreams))) {
+          if (stream == null) {
+            System.out.println("this stream is null");
+          }
+          shaclValidator.validate(stream, elmoShapesResource);
+        }
+      }
+    } catch (RDF4JException | ShaclValdiationException e) {
       throw new ConfigurationException("Error while loading RDF data.", e);
     } finally {
       repositoryConnection.close();

@@ -3,6 +3,8 @@ package org.dotwebstack.framework.validate;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.SequenceInputStream;
 import org.apache.jena.rdf.model.Literal;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.Property;
@@ -16,26 +18,36 @@ import org.eclipse.rdf4j.rio.RDFWriter;
 import org.eclipse.rdf4j.rio.Rio;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.core.io.InputStreamResource;
 import org.springframework.core.io.Resource;
 import org.topbraid.shacl.validation.ValidationUtil;
 import org.topbraid.spin.util.JenaUtil;
 
-public class ShaclValidator implements Validator<Resource, Model> {
+public class ShaclValidator implements Validator<Resource, Model, InputStream> {
 
   private static final Logger LOG = LoggerFactory.getLogger(ShaclValidator.class);
 
   private Model transformTrigFileToModel(Resource trigFile) throws IOException {
     ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+    InputStream trigFileInputStream = trigFile.getInputStream();
 
     RDFWriter turtleWriter = Rio.createWriter(RDFFormat.TURTLE, byteArrayOutputStream);
     RDFParser trigParser = Rio.createParser(RDFFormat.TRIG);
 
     trigParser.setRDFHandler(turtleWriter);
-    trigParser.parse(trigFile.getInputStream(), trigFile.getFile().getAbsolutePath());
+    if (trigFile instanceof InputStreamResource) {
+      trigParser.parse(trigFileInputStream, "/");
+    } else {
+      trigParser.parse(trigFileInputStream, trigFile.getFile().getAbsolutePath());
+    }
 
     Model model = JenaUtil.createMemoryModel();
     model.read(new ByteArrayInputStream(byteArrayOutputStream.toByteArray()), "",
         FileUtils.langTurtle);
+
+    byteArrayOutputStream.close();
+    trigFileInputStream.close();
+
     return model;
   }
 
@@ -80,9 +92,29 @@ public class ShaclValidator implements Validator<Resource, Model> {
   }
 
   @Override
-  public void validate(Resource data, Resource shapes) throws ShaclValdiationException {
+  public void validate(InputStream data, Resource shapes) throws ShaclValdiationException {
     try {
-      Model dataModel = transformTrigFileToModel(data);
+      Model dataModel = transformTrigFileToModel(new InputStreamResource(data));
+      Model dataShape = transformTrigFileToModel(shapes);
+
+      org.apache.jena.rdf.model.Resource report = ValidationUtil
+          .validateModel(dataModel, dataShape, true);
+
+      getValidationReport(report.getModel());
+    } catch (IOException e) {
+      LOG.error("File could not read during the validation process");
+      LOG.error(e.toString());
+      throw new ShaclValdiationException("File could not read during the validation process", e);
+    }
+  }
+
+  @Override
+  public void validate(InputStream data, Resource shapes, Resource prefixes)
+      throws ShaclValdiationException {
+    try {
+      Resource mergedDataResource = new InputStreamResource(
+          new SequenceInputStream(prefixes.getInputStream(), data));
+      Model dataModel = transformTrigFileToModel(mergedDataResource);
       Model dataShape = transformTrigFileToModel(shapes);
 
       org.apache.jena.rdf.model.Resource report = ValidationUtil
