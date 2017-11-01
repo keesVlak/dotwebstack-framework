@@ -3,10 +3,12 @@ package org.dotwebstack.framework.config;
 import com.google.common.base.Charsets;
 import com.google.common.io.CharStreams;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.SequenceInputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -15,6 +17,9 @@ import javax.annotation.PostConstruct;
 import lombok.NonNull;
 import org.apache.commons.io.FilenameUtils;
 import org.dotwebstack.framework.EnvironmentAwareResource;
+import org.dotwebstack.framework.validate.ShaclValdiationException;
+import org.dotwebstack.framework.validate.ShaclValidator;
+import org.dotwebstack.framework.validate.Validator;
 import org.eclipse.rdf4j.RDF4JException;
 import org.eclipse.rdf4j.repository.RepositoryConnection;
 import org.eclipse.rdf4j.repository.RepositoryException;
@@ -43,11 +48,18 @@ public class FileConfigurationBackend
 
   private Environment environment;
 
+  private Validator shaclValidator;
+
+  private Resource elmoShapesResource;
+
   public FileConfigurationBackend(@NonNull Resource elmoConfiguration,
-      @NonNull SailRepository repository, @NonNull String resourcePath) {
+      @NonNull SailRepository repository, @NonNull String resourcePath,
+      @NonNull Resource elmoShapesResource) {
     this.elmoConfiguration = elmoConfiguration;
     this.repository = repository;
     this.resourcePath = resourcePath;
+    this.shaclValidator = new ShaclValidator();
+    this.elmoShapesResource = elmoShapesResource;
     repository.initialize();
   }
 
@@ -68,7 +80,6 @@ public class FileConfigurationBackend
 
   @PostConstruct
   public void loadResources() throws IOException {
-
     Resource[] projectResources =
         ResourcePatternUtils.getResourcePatternResolver(resourceLoader).getResources(
             resourcePath + "/model/**");
@@ -137,15 +148,17 @@ public class FileConfigurationBackend
   }
 
   private String[] getPrefixesOfResource(Resource inputResource) throws IOException {
+    InputStream resourceInputStream = inputResource.getInputStream();
     String result = CharStreams
-        .toString(new InputStreamReader(inputResource.getInputStream(), Charsets.UTF_8));
+        .toString(new InputStreamReader(resourceInputStream, Charsets.UTF_8));
+    resourceInputStream.close();
     return result.split("\n");
   }
 
 
   private void checkMultiplePrefixesDeclaration(Resource prefixes) throws IOException {
     Map<String, String> prefixesMap = new HashMap<>();
-    
+
     final String[] allPrefixes = getPrefixesOfResource(prefixes);
     int lineNumber = 0;
     for (String prefix : allPrefixes) {
