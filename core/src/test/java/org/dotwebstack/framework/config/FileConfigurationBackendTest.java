@@ -19,11 +19,13 @@ import static org.mockito.Mockito.withSettings;
 import com.google.common.base.Charsets;
 import com.google.common.io.CharStreams;
 import java.io.ByteArrayInputStream;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.List;
 import java.util.stream.Collectors;
+import org.apache.commons.io.IOUtils;
 import org.eclipse.rdf4j.repository.RepositoryException;
 import org.eclipse.rdf4j.repository.sail.SailRepository;
 import org.eclipse.rdf4j.repository.sail.SailRepositoryConnection;
@@ -48,6 +50,8 @@ public class FileConfigurationBackendTest {
   @Rule
   public final ExpectedException thrown = ExpectedException.none();
 
+  private final String dummyPath = "/dummy/path";
+
   @Mock
   private SailRepository repository;
 
@@ -55,23 +59,55 @@ public class FileConfigurationBackendTest {
   private Resource elmoConfigurationResource;
 
   @Mock
+  private Resource elmoShapesResource;
+
+  @Mock
   private SailRepositoryConnection repositoryConnection;
 
   @Mock
   private Environment environment;
+
+  @Mock
+  private File dummyFile;
+
+  @Mock
+  private Resource prefixesResource;
 
   private ResourceLoader resourceLoader;
 
   private FileConfigurationBackend backend;
 
   @Before
-  public void setUp() {
+  public void setUp() throws IOException {
+    dummyFile = mock(File.class);
+    elmoConfigurationResource = mock(Resource.class);
+    elmoShapesResource = mock(Resource.class);
+    when(elmoConfigurationResource.getFile()).thenReturn(dummyFile);
+    when(elmoConfigurationResource.getFile().getAbsolutePath()).thenReturn(dummyPath);
+    when(elmoConfigurationResource.getInputStream())
+        .thenReturn(new ByteArrayInputStream("".getBytes()));
+    when(elmoShapesResource.getFile()).thenReturn(dummyFile);
+    when(elmoShapesResource.getFile().getAbsolutePath()).thenReturn(dummyPath);
+    when(elmoShapesResource.getInputStream())
+        .thenReturn(new ByteArrayInputStream("".getBytes()));
     resourceLoader =
         mock(ResourceLoader.class, withSettings().extraInterfaces(ResourcePatternResolver.class));
-    backend = new FileConfigurationBackend(elmoConfigurationResource, repository, "file:config");
+    backend = new FileConfigurationBackend(elmoConfigurationResource, repository, "file:config",
+        elmoShapesResource);
     backend.setResourceLoader(resourceLoader);
     backend.setEnvironment(environment);
     when(repository.getConnection()).thenReturn(repositoryConnection);
+    //when(elmoShapesResource.getFile()).thenReturn(dummyFile);
+    // when(elmoShapesResource.getFile().getAbsolutePath()).thenReturn("/dummy/path");
+
+    when(prefixesResource.getInputStream()).thenReturn(
+        IOUtils.toInputStream("@prefix dbeerpedia: <http://dbeerpedia.org#> .\n"
+            + "@prefix elmo: <http://dotwebstack.org/def/elmo#> .\n"
+            + "@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .\n"
+            + "@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .\n"));
+    when(prefixesResource.getFilename()).thenReturn("_prefixes.trig");
+    //when(prefixesResource.getFile()).thenReturn(dummyFile);
+    // when(prefixesResource.getFile().getAbsolutePath()).thenReturn(dummyPath);
   }
 
   @Test
@@ -80,7 +116,7 @@ public class FileConfigurationBackendTest {
     thrown.expect(NullPointerException.class);
 
     // Act
-    new FileConfigurationBackend(null, repository, "file:config");
+    new FileConfigurationBackend(null, repository, "file:config", elmoShapesResource);
   }
 
   @Test
@@ -89,7 +125,8 @@ public class FileConfigurationBackendTest {
     thrown.expect(NullPointerException.class);
 
     // Act
-    new FileConfigurationBackend(elmoConfigurationResource, null, "file:config");
+    new FileConfigurationBackend(elmoConfigurationResource, null, "file:config",
+        elmoShapesResource);
   }
 
   @Test
@@ -98,7 +135,7 @@ public class FileConfigurationBackendTest {
     thrown.expect(NullPointerException.class);
 
     // Act
-    new FileConfigurationBackend(elmoConfigurationResource, repository, null);
+    new FileConfigurationBackend(elmoConfigurationResource, repository, null, elmoShapesResource);
   }
 
   @Test
@@ -135,8 +172,15 @@ public class FileConfigurationBackendTest {
   public void loadResources_LoadsRepository_WithConfigTrigFile() throws Exception {
     // Arrange
     Resource resource = mock(Resource.class);
+    // when(resource.getFile()).thenReturn(dummyFile);
     when(resource.getInputStream()).thenReturn(
-        new ByteArrayInputStream("file" .getBytes(Charsets.UTF_8)));
+        new ByteArrayInputStream(new String("@prefix elmo: <http://dotwebstack.org/def/elmo#> .\n"
+            + "@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .\n"
+            + "\n"
+            + "GRAPH elmo:Config {\n"
+            + "  elmo:SparqlBackend rdfs:subClassOf elmo:Backend .\n"
+            + "}").getBytes(Charsets.UTF_8)));
+
     when(resource.getFilename()).thenReturn("config.trig");
     when(((ResourcePatternResolver) resourceLoader).getResources(anyString())).thenReturn(
         new Resource[] {resource});
@@ -170,6 +214,7 @@ public class FileConfigurationBackendTest {
     // Arrange
     Resource resource = mock(Resource.class);
     when(resource.getFilename()).thenReturn("not-existing.md");
+    // when(resource.getInputStream()).thenReturn(new ByteArrayInputStream("".getBytes()));
     when(((ResourcePatternResolver) resourceLoader).getResources(anyString())).thenReturn(
         new Resource[] {resource});
 
@@ -219,14 +264,28 @@ public class FileConfigurationBackendTest {
     // Arrange
     Resource resource = mock(Resource.class);
     when(resource.getInputStream()).thenReturn(
-        new ByteArrayInputStream("file" .getBytes(Charsets.UTF_8)));
+        new ByteArrayInputStream(new String("@prefix elmo: <http://dotwebstack.org/def/elmo#> .\n"
+            + "@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .\n"
+            + "\n"
+            + "GRAPH elmo:Config {\n"
+            + "  elmo:SparqlBackend rdfs:subClassOf elmo:Backend .\n"
+            + "}").getBytes(Charsets.UTF_8)));
     when(resource.getFilename()).thenReturn("config.trig");
+    //when(resource.getFile()).thenReturn(dummyFile);
+    //  when(resource.getFile().getAbsolutePath()).thenReturn(dummyPath);
     when(((ResourcePatternResolver) resourceLoader).getResources(any())).thenReturn(
         new Resource[] {resource});
-
+    String elmoContent = "@prefix elmo: <http://dotwebstack.org/def/elmo#> .\n"
+        + "@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .\n"
+        + "\n"
+        + "GRAPH elmo:Config {\n"
+        + "  elmo:SparqlBackend rdfs:subClassOf elmo:Backend .\n"
+        + "}";
     when(elmoConfigurationResource.getInputStream()).thenReturn(
-        new ByteArrayInputStream("elmo" .getBytes(Charsets.UTF_8)));
+        new ByteArrayInputStream(elmoContent.getBytes(Charsets.UTF_8)));
     when(elmoConfigurationResource.getFilename()).thenReturn("elmo.trig");
+    // when(elmoConfigurationResource.getFile()).thenReturn(dummyFile);
+    //when(elmoConfigurationResource.getFile().getAbsolutePath()).thenReturn(dummyPath);
 
     // Act
     backend.loadResources();
@@ -246,7 +305,7 @@ public class FileConfigurationBackendTest {
       }
     }).collect(Collectors.toList());
 
-    assertThat(fileContents, hasItems("file", "elmo"));
+    assertThat(fileContents, hasItems(elmoContent, elmoContent));
   }
 
   @Test
@@ -318,15 +377,21 @@ public class FileConfigurationBackendTest {
   public void loadPrefixes_CombinePrefixesWithConfiguration_WhenLoadResources()
       throws Exception {
     // Arrange
-    Resource prefixesResource = mock(Resource.class);
     Resource backendResource = mock(Resource.class);
-    when(prefixesResource.getInputStream()).thenReturn(
+    Resource resource = mock(Resource.class);
+//    when(resource.getFile()).thenReturn(dummyFile);
+    //when(resource.getFile().getAbsolutePath()).thenReturn(dummyPath);
+    when(resource.getFilename()).thenReturn("_prefixes.trig");
+    when(resource.getInputStream()).thenReturn(
         new ByteArrayInputStream(new String("@prefix dbeerpedia: <http://dbeerpedia.org#> .\n"
             + "@prefix elmo: <http://dotwebstack.org/def/elmo#> .\n"
             + "@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .\n"
-            + "@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .\n")
+            + "@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .\n"
+            + "this is not a valid prefix")
             .getBytes(Charsets.UTF_8)));
-    when(prefixesResource.getFilename()).thenReturn("_prefixes.trig");
+    //when(backendResource.getFile()).thenReturn(dummyFile);
+    //when(backendResource.getFile().getAbsolutePath()).thenReturn(dummyPath);
+    when(backendResource.getFilename()).thenReturn("backend.trig");
     when(backendResource.getInputStream()).thenReturn(
         new ByteArrayInputStream(new String("GRAPH dbeerpedia:Theatre {\n"
             + "  dbeerpedia:Backend a elmo:SparqlBackend;\n"
@@ -334,9 +399,8 @@ public class FileConfigurationBackendTest {
             + "  .\n"
             + "}")
             .getBytes(Charsets.UTF_8)));
-    when(backendResource.getFilename()).thenReturn("backend.trig");
     when(((ResourcePatternResolver) resourceLoader).getResources(any())).thenReturn(
-        new Resource[] {prefixesResource, backendResource});
+        new Resource[] {prefixesResource, backendResource, resource});
 
     // Act / Assert
     backend.loadResources();

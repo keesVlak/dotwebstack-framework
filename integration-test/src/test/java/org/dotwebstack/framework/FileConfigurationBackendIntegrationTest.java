@@ -29,6 +29,8 @@ public class FileConfigurationBackendIntegrationTest {
 
   private Resource elmoConfiguration;
 
+  private Resource elmoShapesResource;
+
   private SailRepository sailRepository;
 
   @Autowired
@@ -37,6 +39,7 @@ public class FileConfigurationBackendIntegrationTest {
   @Before
   public void initVars() {
     elmoConfiguration = new ClassPathResource("/elmo.trig");
+    elmoShapesResource = new ClassPathResource("elmo-shapes.trig");
     sailRepository = new SailRepository(new MemoryStore());
   }
 
@@ -45,11 +48,27 @@ public class FileConfigurationBackendIntegrationTest {
       throws Exception {
     // Arrange
     fileConfigurationBackend = new FileConfigurationBackend(elmoConfiguration, sailRepository,
-        "invalidConfig");
+        "invalidConfig", elmoShapesResource);
 
     // Assert
     thrown.expect(ConfigurationException.class);
     thrown.expectMessage("Error while loading RDF data.");
+
+    // Act
+    fileConfigurationBackend.setEnvironment(environment);
+    fileConfigurationBackend.loadResources();
+  }
+
+  @Test
+  public void configrateBackend_WithPrefix_NoError()
+      throws Exception {
+    // Arrange
+    fileConfigurationBackend = new FileConfigurationBackend(elmoConfiguration, sailRepository,
+        "", elmoShapesResource);
+
+    /*// Assert
+    thrown.expect(ConfigurationException.class);
+    thrown.expectMessage("Error while loading RDF data.");*/
 
     // Act
     fileConfigurationBackend.setEnvironment(environment);

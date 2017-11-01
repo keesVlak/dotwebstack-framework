@@ -29,7 +29,8 @@ public class ApplicationConfigurationTest {
   public void configurationBackend_ReturnsBackend_WhenInstantiated() {
     // Act
     ConfigurationBackend backend =
-        applicationConfiguration.configurationBackend(resource, "file:src/main/resources");
+        applicationConfiguration
+            .configurationBackend(resource, resource, "file:src/main/resources");
 
     // Assert
     assertThat(backend, instanceOf(FileConfigurationBackend.class));

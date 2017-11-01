@@ -1,11 +1,6 @@
-@prefix dbeerpedia: <http://dbeerpedia.org#> .
-@prefix elmo: <http://dotwebstack.org/def/elmo#> .
-@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
-@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
-
 GRAPH dbeerpedia:Theatre {
   dbeerpedia:Site a elmo:Site;
-    elmo:domain "localhost";
+    elmo:domain "dbeerpedia.org";
   .
 
   dbeerpedia:Stage a elmo:Stage;
@@ -13,4 +8,3 @@ GRAPH dbeerpedia:Theatre {
     elmo:basePath "/dbp/ld/v1";
   .
 }
-

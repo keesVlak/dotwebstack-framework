@@ -6,6 +6,7 @@ import static org.mockito.Mockito.when;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import org.junit.Before;
 import org.junit.Rule;
@@ -117,7 +118,7 @@ public class SHACLValitdatorTest {
         dataContent.getBytes(StandardCharsets.UTF_8)));
 
     // Act / Assert
-    shaclValidator.validate(dataResource, shapesResource);
+    shaclValidator.validate(dataResource.getInputStream(), shapesResource);
   }
 
   @Test
@@ -155,20 +156,22 @@ public class SHACLValitdatorTest {
     thrown.expect(ShaclValdiationException.class);
 
     // Act
-    shaclValidator.validate(dataResource, shapesResource);
+    shaclValidator.validate(dataResource.getInputStream(), shapesResource);
   }
 
   @Test
   public void validate_throwSHACLValidationException_WithIOException() throws Exception {
     // Arrange
-    when(dataResource.getFile()).thenThrow(IOException.class);
+    when(dataResource.getInputStream()).thenThrow(IOException.class);
+    InputStream resource = mock(InputStream.class);
+
 
     // Assert
     thrown.expect(ShaclValdiationException.class);
     thrown.expectMessage("File could not read during the validation process");
 
     // Act
-    shaclValidator.validate(dataResource, shapesResource);
+    shaclValidator.validate(resource, shapesResource);
   }
 
 }

@@ -28,7 +28,7 @@ public class ShaclValidatorIntegrationTest {
         "/model/frontend/representations.trig");
 
     // Act / Assert
-    shaclValidator.validate(representationConfigResource, elmoShapesResource);
+    shaclValidator.validate(representationConfigResource.getInputStream(), elmoShapesResource);
   }
 
   @Test
@@ -46,6 +46,6 @@ public class ShaclValidatorIntegrationTest {
         "Invalid configuration at path [http://dotwebstack.org/def/elmo#name] on node [http://dbeerpedia.org#GraphBreweryListRepresentation] with error message [More than 1 values]");
 
     // Act
-    shaclValidator.validate(representationConfigResource, elmoShapesResource);
+    shaclValidator.validate(representationConfigResource.getInputStream(), elmoShapesResource);
   }
 }
