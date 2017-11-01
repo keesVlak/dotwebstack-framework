@@ -1,4 +1,9 @@
+
 GRAPH dbeerpedia:Theatre {
+  dbeerpedia:IdFilter a elmo:TermFilter;
+    elmo:name "id";
+  .
+
   dbeerpedia:TupleBreweries a elmo:InformationProduct;
       rdfs:label "Beer breweries in The Netherlands";
       elmo:backend dbeerpedia:Backend;
