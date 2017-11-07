@@ -1,6 +1,6 @@
 GRAPH dbeerpedia:Theatre {
   dbeerpedia:Site a elmo:Site;
-    elmo:domain "dbeerpedia.org";
+    elmo:domain "localhost";
   .
 
   dbeerpedia:Stage a elmo:Stage;

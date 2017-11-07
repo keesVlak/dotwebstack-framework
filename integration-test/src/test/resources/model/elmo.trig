@@ -10,14 +10,13 @@
 # A complementary file contains the shape graph that should be used when creating statements using this vocabulary.
 #
 
-@prefix elmo: <http://dotwebstack.org/def/elmo#>.
-@prefix elmo-sp: <http://dotwebstack.org/def/elmo/storage-protocol/>.
 
-@prefix xsd: <http://www.w3.org/2001/XMLSchema#>.
-@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>.
-@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>.
-@prefix owl: <http://www.w3.org/2002/07/owl#>.
-@prefix sh: <http://www.w3.org/ns/shacl#>.
+
+# =========
+# Imports
+#
+xsd:string a rdfs:Datatype.
+xsd:integer a rdfs:Datatype.
 
 # =========
 # Ontology spec
@@ -338,4 +337,25 @@ elmo:Fragment a owl:Class;
 elmo:Appearance a owl:Class;
 	rdfs:label "Appearance"@en;
 	rdfs:comment "The class of appearances";
+.
+
+##################################################
+
+# =========
+# Resulttypes
+#
+
+elmo-schemes:result-types a skos:ConceptScheme;
+	rdfs:label "Result types"@en;
+.
+
+elmo-rt:Tuple a elmo:ResultType;
+	skos:inScheme elmo-schemes:result-types;
+	rdfs:label "Tuple";
+	rdfs:comment "The result contains tuples (an ordered list of bindingsets), for example the result of a SELECT query."
+.
+elmo-rt:Graph a elmo:ResultType;
+	skos:inScheme elmo-schemes:result-types;
+	rdfs:label "Graph";
+	rdfs:comment "The result is a graph (a set of triples), for example the result of a CONSTRUCT query."
 .

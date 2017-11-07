@@ -1,13 +1,22 @@
 GRAPH dbeerpedia:Theatre {
+
+  dbeerpedia:Backend a elmo:SparqlBackend;
+     elmo:endpoint "http://localhost:8890/sparql"^^xsd:anyURI;
+  .
+
   dbeerpedia:IdFilter a elmo:TermFilter;
     elmo:name "id";
+    elmo:shape [
+      sh:datatype xsd:string;
+      sh:minLength 2;
+    ];
   .
 
   dbeerpedia:TupleBreweries a elmo:InformationProduct;
-    rdfs:label "Beer breweries in The Netherlands";
-    elmo:backend dbeerpedia:Backend;
-    elmo:resultType elmo-resulttype:Tuple;
-    elmo:query "SELECT ?name WHERE { ?s rdfs:label ?name . ?s a <http://dbeerpedia.org#Brewery> }";
+      rdfs:label "Beer breweries in The Netherlands";
+     elmo:backend dbeerpedia:Backend;
+     elmo:resultType elmo-resulttype:Tuple;
+      elmo:query "SELECT ?name WHERE { ?s rdfs:label ?name . ?s a <http://dbeerpedia.org#Brewery> }";
   .
 
   dbeerpedia:TupleBrewery a elmo:InformationProduct;

@@ -130,7 +130,6 @@ public class FileConfigurationBackend
         }
         LOG.info("Loaded configuration file: \"{}\"", resource.getFilename());
       }
-      configurationStreams.add(elmoConfiguration.getInputStream());
       if (configurationStreams.size() > 1) {
         try (InputStream stream = new SequenceInputStream(
             Collections.enumeration(configurationStreams))) {

@@ -15,7 +15,7 @@ public class ApplicationConfiguration {
   @Bean
   public ConfigurationBackend configurationBackend(
       @Value("classpath:/model/elmo.trig") Resource elmoConfiguration,
-      @Value("classpath:/elmo-shapes.trig") Resource elmoShapesResource,
+      @Value("classpath:elmo-shapes.trig") Resource elmoShapesResource,
       @Value("#{applicationProperties.resourcePath}") String resourcePath) {
     return new FileConfigurationBackend(elmoConfiguration, new SailRepository(new MemoryStore()),
         resourcePath, elmoShapesResource);
