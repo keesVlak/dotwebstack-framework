@@ -1,25 +1,26 @@
 package org.dotwebstack.framework.vocabulary;
 
+import lombok.AccessLevel;
+import lombok.experimental.FieldDefaults;
+import lombok.experimental.UtilityClass;
 import org.eclipse.rdf4j.model.IRI;
-import org.eclipse.rdf4j.model.ValueFactory;
 import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
 
+@UtilityClass
+@FieldDefaults(makeFinal = true, level = AccessLevel.PUBLIC)
 public final class SHACL {
 
-  public static final IRI DATATYPE;
+  private SimpleValueFactory VALUE_FACTORY = SimpleValueFactory.getInstance();
 
-  public static final IRI DEFAULT_VALUE;
+  String NAMESPACE = "http://www.w3.org/ns/shacl#";
+  IRI DATATYPE;
+  IRI DEFAULT_VALUE;
+  IRI IN;
+
 
   static {
-    ValueFactory valueFactory = SimpleValueFactory.getInstance();
-
-    DATATYPE = valueFactory.createIRI("http://www.w3.org/ns/shacl#", "datatype");
-    DEFAULT_VALUE = valueFactory.createIRI("http://www.w3.org/ns/shacl#", "defaultValue");
+    DATATYPE = VALUE_FACTORY.createIRI(NAMESPACE, "datatype");
+    DEFAULT_VALUE = VALUE_FACTORY.createIRI(NAMESPACE, "defaultValue");
+    IN = VALUE_FACTORY.createIRI(NAMESPACE, "in");
   }
-
-  private SHACL() {
-    throw new IllegalStateException(
-        String.format("%s is not meant to be instantiated.", SHACL.class));
-  }
-
 }
