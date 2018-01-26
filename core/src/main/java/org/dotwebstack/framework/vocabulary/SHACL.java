@@ -1,21 +1,21 @@
 package org.dotwebstack.framework.vocabulary;
 
-import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
 import lombok.experimental.UtilityClass;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
 
+//CHECKSTYLE.OFF: Lombok issue
 @UtilityClass
-@FieldDefaults(makeFinal = true, level = AccessLevel.PUBLIC)
-public final class SHACL {
+@FieldDefaults(makeFinal = true)
+public class SHACL {
 
   private SimpleValueFactory VALUE_FACTORY = SimpleValueFactory.getInstance();
 
   String NAMESPACE = "http://www.w3.org/ns/shacl#";
-  IRI DATATYPE;
-  IRI DEFAULT_VALUE;
-  IRI IN;
+  public IRI DATATYPE;
+  public IRI DEFAULT_VALUE;
+  public IRI IN;
 
 
   static {
@@ -24,3 +24,4 @@ public final class SHACL {
     IN = VALUE_FACTORY.createIRI(NAMESPACE, "in");
   }
 }
+//CHECKSTYLE.ON: Lombok issue

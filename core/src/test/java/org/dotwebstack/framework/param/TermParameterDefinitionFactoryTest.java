@@ -1,16 +1,21 @@
 package org.dotwebstack.framework.param;
 
+import static org.hamcrest.Matchers.contains;
+import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.hamcrest.Matchers.instanceOf;
 import static org.hamcrest.Matchers.is;
+import static org.hamcrest.core.IsNot.not;
 import static org.junit.Assert.assertThat;
 
-import com.google.common.collect.ImmutableList;
+import java.util.Collection;
+import java.util.Collections;
 import org.dotwebstack.framework.config.ConfigurationException;
 import org.dotwebstack.framework.test.DBEERPEDIA;
 import org.dotwebstack.framework.vocabulary.ELMO;
 import org.dotwebstack.framework.vocabulary.SHACL;
 import org.eclipse.rdf4j.model.BNode;
 import org.eclipse.rdf4j.model.IRI;
+import org.eclipse.rdf4j.model.Literal;
 import org.eclipse.rdf4j.model.Model;
 import org.eclipse.rdf4j.model.ValueFactory;
 import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
@@ -65,7 +70,7 @@ public class TermParameterDefinitionFactoryTest {
 
     builder.subject(DBEERPEDIA.NAME_PARAMETER_ID).add(RDF.TYPE, ELMO.TERM_FILTER).add(
         ELMO.NAME_PROP, DBEERPEDIA.NAME_PARAMETER_VALUE).add(ELMO.SHAPE_PROP, blankNode).subject(
-            blankNode).add(SHACL.DATATYPE, XMLSchema.STRING);
+        blankNode).add(SHACL.DATATYPE, XMLSchema.STRING);
 
     Model model = builder.build();
 
@@ -87,7 +92,7 @@ public class TermParameterDefinitionFactoryTest {
 
     builder.subject(DBEERPEDIA.NAME_PARAMETER_ID).add(RDF.TYPE, ELMO.TERM_FILTER).add(
         ELMO.NAME_PROP, DBEERPEDIA.NAME_PARAMETER_VALUE).add(ELMO.SHAPE_PROP, blankNode).subject(
-            blankNode).add(SHACL.DATATYPE, XMLSchema.INTEGER);
+        blankNode).add(SHACL.DATATYPE, XMLSchema.INTEGER);
 
     Model model = builder.build();
 
@@ -109,7 +114,7 @@ public class TermParameterDefinitionFactoryTest {
 
     builder.subject(DBEERPEDIA.NAME_PARAMETER_ID).add(RDF.TYPE, ELMO.TERM_FILTER).add(
         ELMO.NAME_PROP, DBEERPEDIA.NAME_PARAMETER_VALUE).add(ELMO.SHAPE_PROP, blankNode).subject(
-            blankNode).add(SHACL.DATATYPE, XMLSchema.BOOLEAN);
+        blankNode).add(SHACL.DATATYPE, XMLSchema.BOOLEAN);
 
     Model model = builder.build();
 
@@ -131,7 +136,7 @@ public class TermParameterDefinitionFactoryTest {
 
     builder.subject(DBEERPEDIA.NAME_PARAMETER_ID).add(RDF.TYPE, ELMO.TERM_FILTER).add(
         ELMO.NAME_PROP, DBEERPEDIA.NAME_PARAMETER_VALUE).add(ELMO.SHAPE_PROP, blankNode).subject(
-            blankNode).add(SHACL.DATATYPE, XMLSchema.ANYURI);
+        blankNode).add(SHACL.DATATYPE, XMLSchema.ANYURI);
 
     Model model = builder.build();
 
@@ -173,7 +178,7 @@ public class TermParameterDefinitionFactoryTest {
 
     builder.subject(DBEERPEDIA.NAME_PARAMETER_ID).add(RDF.TYPE, ELMO.TERM_FILTER).add(
         ELMO.NAME_PROP, DBEERPEDIA.NAME_PARAMETER_VALUE).add(ELMO.SHAPE_PROP, blankNode).subject(
-            blankNode).add(SHACL.DATATYPE, XMLSchema.STRING);
+        blankNode).add(SHACL.DATATYPE, XMLSchema.STRING);
 
     Model model = builder.build();
 
@@ -184,7 +189,7 @@ public class TermParameterDefinitionFactoryTest {
 
     // Assert
     assertThat(result.getShaclShape(),
-        is(new ShaclShape(XMLSchema.STRING, null, ImmutableList.of())));
+        is(new ShaclShape(XMLSchema.STRING, null, Collections.emptySet())));
   }
 
   @Test
@@ -195,8 +200,7 @@ public class TermParameterDefinitionFactoryTest {
 
     builder.subject(DBEERPEDIA.NAME_PARAMETER_ID).add(RDF.TYPE, ELMO.TERM_FILTER).add(
         ELMO.NAME_PROP, DBEERPEDIA.NAME_PARAMETER_VALUE).add(ELMO.SHAPE_PROP, blankNode).subject(
-            blankNode).add(SHACL.DATATYPE, XMLSchema.STRING).add(SHACL.DEFAULT_VALUE, "foo");
-
+        blankNode).add(SHACL.DATATYPE, XMLSchema.STRING).add(SHACL.DEFAULT_VALUE, "foo");
     Model model = builder.build();
 
     // Act
@@ -207,7 +211,37 @@ public class TermParameterDefinitionFactoryTest {
     // Assert
     assertThat(result, instanceOf(TermParameterDefinition.class));
     assertThat(result.getShaclShape(), is(
-        new ShaclShape(XMLSchema.STRING, VALUE_FACTORY.createLiteral("foo"), ImmutableList.of())));
+        new ShaclShape(XMLSchema.STRING, VALUE_FACTORY.createLiteral("foo"),
+            Collections.emptySet())));
+  }
+
+  @Test
+  public void create_createsTermParameterDefinition_WithProvidedIn() {
+    // Arrange
+    ModelBuilder builder = new ModelBuilder();
+    BNode blankNode = VALUE_FACTORY.createBNode();
+
+    builder.subject(DBEERPEDIA.NAME_PARAMETER_ID).add(RDF.TYPE, ELMO.TERM_FILTER).add(
+        ELMO.NAME_PROP, DBEERPEDIA.NAME_PARAMETER_VALUE).add(ELMO.SHAPE_PROP, blankNode).subject(
+        blankNode).add(SHACL.DATATYPE, XMLSchema.STRING).add(SHACL.DEFAULT_VALUE, "foo")
+        .add(SHACL.IN, "Veenendaal").add(SHACL.IN, "Apeldoorn").add(SHACL.IN, "Nunspeet");
+    Model model = builder.build();
+
+    // Act
+    TermParameterDefinition result =
+        (TermParameterDefinition) parameterDefinitionFactory.create(model,
+            DBEERPEDIA.NAME_PARAMETER_ID);
+
+    // Assert
+    Collection<Literal> in = result.getShaclShape().getIn();
+    System.out.println(in);
+    assertThat(result, instanceOf(TermParameterDefinition.class));
+    assertThat(in, containsInAnyOrder(VALUE_FACTORY.createLiteral("Nunspeet"),
+        VALUE_FACTORY.createLiteral("Apeldoorn"), VALUE_FACTORY.createLiteral("Veenendaal")));
+
+    assertThat(in, not(contains(VALUE_FACTORY.createLiteral("Amersfoort"))));
+    assertThat(in, not(contains(VALUE_FACTORY.createLiteral("Houten"))));
+
   }
 
 }

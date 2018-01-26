@@ -1,5 +1,7 @@
 package org.dotwebstack.framework.param.term;
 
+import com.google.common.collect.ImmutableList;
+import java.util.Collection;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Literal;
 
@@ -10,7 +12,12 @@ public class IntegerTermParameter extends TermParameter<Integer> {
   }
 
   IntegerTermParameter(IRI identifier, String name, boolean required, Integer defaultValue) {
-    super(identifier, name, required, defaultValue);
+    this(identifier, name, required, defaultValue, ImmutableList.of());
+  }
+
+  IntegerTermParameter(IRI identifier, String name, boolean required, Integer defaultValue,
+      Collection<Literal> in) {
+    super(identifier, name, required, defaultValue, in);
   }
 
   @Override

@@ -21,15 +21,15 @@ public final class TermParameterFactory {
     IRI type = shape.getDatatype();
     if (type.equals(XMLSchema.STRING)) {
       String defVal = defaultValue != null ? defaultValue.stringValue() : null;
-      return new StringTermParameter(identifier, name, required, defVal);
+      return new StringTermParameter(identifier, name, required, defVal, shape.getIn());
     } else if (type.equals(XMLSchema.INTEGER)) {
       Integer defVal = defaultValue != null ? ((Literal) defaultValue).intValue() : null;
-      return new IntegerTermParameter(identifier, name, required, defVal);
+      return new IntegerTermParameter(identifier, name, required, defVal, shape.getIn());
     } else if (type.equals(XMLSchema.BOOLEAN)) {
       Boolean defVal = defaultValue != null ? ((Literal) defaultValue).booleanValue() : null;
-      return new BooleanTermParameter(identifier, name, required, defVal);
+      return new BooleanTermParameter(identifier, name, required, defVal, shape.getIn());
     } else if (type.equals(XMLSchema.ANYURI)) {
-      return new IriTermParameter(identifier, name, required, (IRI) defaultValue);
+      return new IriTermParameter(identifier, name, required, (IRI) defaultValue, shape.getIn());
     }
     throw new ConfigurationException(
         String.format("Unsupported data type: <%s>. Supported types: %s", type, ImmutableList.of(

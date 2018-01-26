@@ -1,5 +1,6 @@
 package org.dotwebstack.framework.param.term;
 
+import java.util.Collection;
 import java.util.Map;
 import lombok.Getter;
 import lombok.NonNull;
@@ -7,6 +8,7 @@ import org.dotwebstack.framework.backend.BackendException;
 import org.dotwebstack.framework.param.AbstractParameter;
 import org.dotwebstack.framework.param.BindableParameter;
 import org.eclipse.rdf4j.model.IRI;
+import org.eclipse.rdf4j.model.Literal;
 import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
 
 public abstract class TermParameter<T> extends AbstractParameter<T>
@@ -16,11 +18,14 @@ public abstract class TermParameter<T> extends AbstractParameter<T>
 
   @Getter
   protected final T defaultValue;
+  @Getter
+  protected final Collection<Literal> in;
 
   protected TermParameter(@NonNull IRI identifier, @NonNull String name, boolean required,
-      T defaultValue) {
+      T defaultValue, Collection<Literal> in) {
     super(identifier, name, required);
     this.defaultValue = defaultValue;
+    this.in = in;
   }
 
   @Override

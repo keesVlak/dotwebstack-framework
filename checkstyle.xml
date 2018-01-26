@@ -16,6 +16,7 @@
  -->
 
 <!-- Based on: https://raw.githubusercontent.com/checkstyle/checkstyle/checkstyle-8.4/src/main/resources/google_checks.xml -->
+
 <module name="Checker">
   <property name="charset" value="UTF-8"/>
 
@@ -29,6 +30,10 @@
   </module>
 
   <module name="TreeWalker">
+    <module name="SuppressionCommentFilter">
+      <property name="offCommentFormat" value="CHECKSTYLE.OFF\: ([\w\|]+)"/>
+      <property name="onCommentFormat" value="CHECKSTYLE.ON\: ([\w\|]+)"/>
+    </module>
     <module name="OuterTypeFilename"/>
     <module name="IllegalTokenText">
       <property name="tokens" value="STRING_LITERAL, CHAR_LITERAL"/>

@@ -4,7 +4,7 @@ import static org.eclipse.rdf4j.model.util.Models.object;
 import static org.eclipse.rdf4j.model.util.Models.objectIRI;
 import static org.eclipse.rdf4j.model.util.Models.objectResource;
 
-import com.google.common.collect.ImmutableList;
+import java.util.Set;
 import java.util.function.Supplier;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
@@ -12,6 +12,7 @@ import org.dotwebstack.framework.config.ConfigurationException;
 import org.dotwebstack.framework.vocabulary.ELMO;
 import org.dotwebstack.framework.vocabulary.SHACL;
 import org.eclipse.rdf4j.model.IRI;
+import org.eclipse.rdf4j.model.Literal;
 import org.eclipse.rdf4j.model.Model;
 import org.eclipse.rdf4j.model.Resource;
 import org.eclipse.rdf4j.model.Value;
@@ -35,7 +36,9 @@ final class TermParameterDefinitionFactory implements ParameterDefinitionFactory
 
     Value defaultValue = object(model.filter(subj, SHACL.DEFAULT_VALUE, null)).orElse(null);
 
-    ShaclShape shape = new ShaclShape(iriShapeType, defaultValue, ImmutableList.of());
+    Set<Literal> in = Models.objectLiterals(model.filter(subj, SHACL.IN, null));
+
+    ShaclShape shape = new ShaclShape(iriShapeType, defaultValue, in);
     return new TermParameterDefinition(id, name, shape);
   }
 
