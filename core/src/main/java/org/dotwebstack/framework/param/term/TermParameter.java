@@ -2,6 +2,7 @@ package org.dotwebstack.framework.param.term;
 
 import java.util.Collection;
 import java.util.Map;
+import java.util.stream.Collectors;
 import lombok.Getter;
 import lombok.NonNull;
 import org.dotwebstack.framework.backend.BackendException;
@@ -9,6 +10,7 @@ import org.dotwebstack.framework.param.AbstractParameter;
 import org.dotwebstack.framework.param.BindableParameter;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Literal;
+import org.eclipse.rdf4j.model.Value;
 import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
 
 public abstract class TermParameter<T> extends AbstractParameter<T>
@@ -31,7 +33,18 @@ public abstract class TermParameter<T> extends AbstractParameter<T>
   @Override
   protected T handleInner(Map<String, String> parameterValues) {
     String value = parameterValues.get(getName());
-    return value != null ? handleInner(value) : defaultValue;
+    if (value != null) {
+      if (in.isEmpty() || in.contains(VALUE_FACTORY.createLiteral(value))) {
+        return handleInner(value);
+      } else {
+        String options = in.stream().map(Value::stringValue).collect(Collectors.joining(", "));
+        throw new BackendException(String.format(
+            "Value for parameter '%s' not an enum value: [%s]. " + "Supplied parameterValues:",
+            getIdentifier(), options));
+      }
+    } else {
+      return defaultValue;
+    }
   }
 
   protected abstract T handleInner(String value);
