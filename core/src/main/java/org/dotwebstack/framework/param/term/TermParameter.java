@@ -49,11 +49,17 @@ public abstract class TermParameter<T> extends AbstractParameter<T>
   protected void validateInner(@NonNull Map<String, String> parameterValues) {
     String value = parameterValues.get(getName());
     LOG.debug("Validate {} using sh:in: {}", getName(), in);
+
+    // XXX (PvH) De ifs kan je zonder logging samenvoegen. Dit voorkomt arrow code.
     if (value != null && !in.isEmpty()) {
       if (!in.contains(VALUE_FACTORY.createLiteral(value))) {
+
+        // XXX (PvH) Ik zou hier Literal::stringValue aanroepen. Value komt hier uit de lucht
+        // vallen.
         String options = in.stream().map(Value::stringValue).collect(joining(", "));
+
         throw new BackendException(String.format(
-            "Value for parameter '%s' not an enum value: [%s]. " + "Supplied parameterValue: %s",
+            "Value for parameter '%s' not an enum value: [%s]. Supplied parameterValue: %s",
             getIdentifier(), options, value));
       } else {
         LOG.debug("Parameter has valid value: {}", value);

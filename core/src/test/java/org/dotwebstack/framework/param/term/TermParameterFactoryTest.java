@@ -117,9 +117,14 @@ public class TermParameterFactoryTest {
     TermParameter result = newTermParameter(DBEERPEDIA.NAME_PARAMETER_ID, "name", shape, false);
 
     // Assert
+
+    // XXX (PvH) Kwestie van stijl, maar je zou deze 3 asserts kunnen weglaten. Ze zijn tenslotte
+    // elders al getest. Daarbij focus je je dan op de assert waarom het eigenlijk draait.
     assertThat(result, instanceOf(StringTermParameter.class));
     assertThat(result.getDefaultValue(), is(nullValue()));
     assertThat(result.isRequired(), is(false));
+
+    // XXX (PvH) Kan ook: assertThat(result.getIn(), is(in));
     assertThat(result.getIn(), is(ImmutableList.of(nunspeet, apeldoorn, veenendaal)));
   }
 

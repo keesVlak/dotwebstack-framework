@@ -68,7 +68,7 @@ public class TermParameterDefinitionFactoryTest {
 
     builder.subject(DBEERPEDIA.NAME_PARAMETER_ID).add(RDF.TYPE, ELMO.TERM_FILTER).add(
         ELMO.NAME_PROP, DBEERPEDIA.NAME_PARAMETER_VALUE).add(ELMO.SHAPE_PROP, blankNode).subject(
-        blankNode).add(SHACL.DATATYPE, XMLSchema.STRING);
+            blankNode).add(SHACL.DATATYPE, XMLSchema.STRING);
 
     Model model = builder.build();
 
@@ -90,7 +90,7 @@ public class TermParameterDefinitionFactoryTest {
 
     builder.subject(DBEERPEDIA.NAME_PARAMETER_ID).add(RDF.TYPE, ELMO.TERM_FILTER).add(
         ELMO.NAME_PROP, DBEERPEDIA.NAME_PARAMETER_VALUE).add(ELMO.SHAPE_PROP, blankNode).subject(
-        blankNode).add(SHACL.DATATYPE, XMLSchema.INTEGER);
+            blankNode).add(SHACL.DATATYPE, XMLSchema.INTEGER);
 
     Model model = builder.build();
 
@@ -112,7 +112,7 @@ public class TermParameterDefinitionFactoryTest {
 
     builder.subject(DBEERPEDIA.NAME_PARAMETER_ID).add(RDF.TYPE, ELMO.TERM_FILTER).add(
         ELMO.NAME_PROP, DBEERPEDIA.NAME_PARAMETER_VALUE).add(ELMO.SHAPE_PROP, blankNode).subject(
-        blankNode).add(SHACL.DATATYPE, XMLSchema.BOOLEAN);
+            blankNode).add(SHACL.DATATYPE, XMLSchema.BOOLEAN);
 
     Model model = builder.build();
 
@@ -134,7 +134,7 @@ public class TermParameterDefinitionFactoryTest {
 
     builder.subject(DBEERPEDIA.NAME_PARAMETER_ID).add(RDF.TYPE, ELMO.TERM_FILTER).add(
         ELMO.NAME_PROP, DBEERPEDIA.NAME_PARAMETER_VALUE).add(ELMO.SHAPE_PROP, blankNode).subject(
-        blankNode).add(SHACL.DATATYPE, XMLSchema.ANYURI);
+            blankNode).add(SHACL.DATATYPE, XMLSchema.ANYURI);
 
     Model model = builder.build();
 
@@ -176,7 +176,7 @@ public class TermParameterDefinitionFactoryTest {
 
     builder.subject(DBEERPEDIA.NAME_PARAMETER_ID).add(RDF.TYPE, ELMO.TERM_FILTER).add(
         ELMO.NAME_PROP, DBEERPEDIA.NAME_PARAMETER_VALUE).add(ELMO.SHAPE_PROP, blankNode).subject(
-        blankNode).add(SHACL.DATATYPE, XMLSchema.STRING);
+            blankNode).add(SHACL.DATATYPE, XMLSchema.STRING);
 
     Model model = builder.build();
 
@@ -198,7 +198,7 @@ public class TermParameterDefinitionFactoryTest {
 
     builder.subject(DBEERPEDIA.NAME_PARAMETER_ID).add(RDF.TYPE, ELMO.TERM_FILTER).add(
         ELMO.NAME_PROP, DBEERPEDIA.NAME_PARAMETER_VALUE).add(ELMO.SHAPE_PROP, blankNode).subject(
-        blankNode).add(SHACL.DATATYPE, XMLSchema.STRING).add(SHACL.DEFAULT_VALUE, "foo");
+            blankNode).add(SHACL.DATATYPE, XMLSchema.STRING).add(SHACL.DEFAULT_VALUE, "foo");
     Model model = builder.build();
 
     // Act
@@ -207,10 +207,8 @@ public class TermParameterDefinitionFactoryTest {
             DBEERPEDIA.NAME_PARAMETER_ID);
 
     // Assert
-    assertThat(result, instanceOf(TermParameterDefinition.class));
-    assertThat(result.getShaclShape(), is(
-        new ShaclShape(XMLSchema.STRING, VALUE_FACTORY.createLiteral("foo"),
-            Collections.emptySet())));
+    assertThat(result.getShaclShape(), is(new ShaclShape(XMLSchema.STRING,
+        VALUE_FACTORY.createLiteral("foo"), Collections.emptySet())));
   }
 
   @Test
@@ -221,8 +219,8 @@ public class TermParameterDefinitionFactoryTest {
 
     builder.subject(DBEERPEDIA.NAME_PARAMETER_ID).add(RDF.TYPE, ELMO.TERM_FILTER).add(
         ELMO.NAME_PROP, DBEERPEDIA.NAME_PARAMETER_VALUE).add(ELMO.SHAPE_PROP, blankNode).subject(
-        blankNode).add(SHACL.DATATYPE, XMLSchema.STRING).add(SHACL.DEFAULT_VALUE, "foo")
-        .add(SHACL.IN, "Veenendaal").add(SHACL.IN, "Apeldoorn").add(SHACL.IN, "Nunspeet");
+            blankNode).add(SHACL.DATATYPE, XMLSchema.STRING).add(SHACL.DEFAULT_VALUE, "foo").add(
+                SHACL.IN, "Veenendaal").add(SHACL.IN, "Apeldoorn").add(SHACL.IN, "Nunspeet");
     Model model = builder.build();
 
     // Act
@@ -232,13 +230,12 @@ public class TermParameterDefinitionFactoryTest {
 
     // Assert
     Collection<Literal> in = result.getShaclShape().getIn();
-    assertThat(result, instanceOf(TermParameterDefinition.class));
     assertThat(in, containsInAnyOrder(VALUE_FACTORY.createLiteral("Nunspeet"),
         VALUE_FACTORY.createLiteral("Apeldoorn"), VALUE_FACTORY.createLiteral("Veenendaal")));
 
+    // XXX (PvH) Waarom doe je deze asserts? Handelt containsInAnyOrder dit niet af
     assertThat(in.contains(VALUE_FACTORY.createLiteral("Amersfoort")), is(false));
     assertThat(in.contains(VALUE_FACTORY.createLiteral("Houten")), is(false));
-
   }
 
 }

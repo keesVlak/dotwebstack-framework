@@ -19,6 +19,7 @@ public final class ShaclShape {
 
   Value defaultValue;
 
+  // XXX (PvH) Werken Literals wel met de IriTermParameter?
   @NonNull
   Collection<Literal> in;
 }
