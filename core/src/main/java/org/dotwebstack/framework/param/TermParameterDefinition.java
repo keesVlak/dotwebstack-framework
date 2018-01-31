@@ -7,12 +7,9 @@ import static org.dotwebstack.framework.param.term.TermParameterFactory.newTermP
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.experimental.FieldDefaults;
-import lombok.extern.slf4j.Slf4j;
 import org.dotwebstack.framework.param.term.TermParameter;
 import org.eclipse.rdf4j.model.IRI;
 
-// XXX (PvH) Logging wordt niet gebruikt, annotatie kan daarom weg
-@Slf4j
 @FieldDefaults(makeFinal = true, level = PRIVATE)
 @Getter(PACKAGE)
 public final class TermParameterDefinition extends AbstractParameterDefinition<TermParameter<?>> {

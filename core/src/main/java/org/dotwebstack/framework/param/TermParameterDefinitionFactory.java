@@ -9,7 +9,6 @@ import java.util.Set;
 import java.util.function.Supplier;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
-import lombok.extern.slf4j.Slf4j;
 import org.dotwebstack.framework.config.ConfigurationException;
 import org.dotwebstack.framework.vocabulary.ELMO;
 import org.dotwebstack.framework.vocabulary.SHACL;
@@ -23,7 +22,6 @@ import org.springframework.stereotype.Service;
 
 @Service
 @NoArgsConstructor
-@Slf4j
 final class TermParameterDefinitionFactory implements ParameterDefinitionFactory {
 
   @Override
@@ -40,12 +38,6 @@ final class TermParameterDefinitionFactory implements ParameterDefinitionFactory
     Value defaultValue = object(model.filter(subj, SHACL.DEFAULT_VALUE, null)).orElse(null);
 
     Set<Literal> in = objectLiterals(model.filter(subj, SHACL.IN, null));
-
-    LOG.debug("Name: {}", name);
-    LOG.debug("Subject: {}", subj.stringValue());
-    LOG.debug("ShapeType: {}", iriShapeType);
-    LOG.debug("Default: {}", defaultValue);
-    LOG.debug("sh:in; {}", in);
 
     ShaclShape shape = new ShaclShape(iriShapeType, defaultValue, in);
     return new TermParameterDefinition(id, name, shape);

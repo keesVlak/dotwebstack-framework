@@ -1,5 +1,6 @@
 package org.dotwebstack.framework.param.term;
 
+import static org.dotwebstack.framework.param.term.TermParameter.VALUE_FACTORY;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.nullValue;
 import static org.junit.Assert.assertThat;
@@ -14,7 +15,6 @@ import org.dotwebstack.framework.param.BindableParameter;
 import org.dotwebstack.framework.test.DBEERPEDIA;
 import org.eclipse.rdf4j.model.Literal;
 import org.eclipse.rdf4j.model.Value;
-import org.eclipse.rdf4j.model.ValueFactory;
 import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
 import org.junit.Before;
 import org.junit.Rule;
@@ -23,7 +23,6 @@ import org.junit.rules.ExpectedException;
 
 public class StringTermParameterTest {
 
-  private static final ValueFactory VALUE_FACTORY = SimpleValueFactory.getInstance();
   @Rule
   public ExpectedException thrown = ExpectedException.none();
 

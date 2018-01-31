@@ -78,7 +78,7 @@ public class ShaclShapeTest {
   @Test
   public void create_WrongType() {
     // Arrange
-    IRI wrongString = FACTORY.createIRI(SHACL.DEFAULT_VALUE.getNamespace() + "string");
+    IRI wrongString = FACTORY.createIRI(SHACL.NAMESPACE + "string");
 
     // Act
     ShaclShape shape = new ShaclShape(wrongString, null, ImmutableList.of());

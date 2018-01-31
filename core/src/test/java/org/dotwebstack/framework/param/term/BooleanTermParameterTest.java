@@ -1,5 +1,6 @@
 package org.dotwebstack.framework.param.term;
 
+import static org.dotwebstack.framework.param.term.TermParameter.VALUE_FACTORY;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.nullValue;
 import static org.junit.Assert.assertThat;
@@ -11,7 +12,6 @@ import org.dotwebstack.framework.backend.BackendException;
 import org.dotwebstack.framework.param.BindableParameter;
 import org.dotwebstack.framework.test.DBEERPEDIA;
 import org.eclipse.rdf4j.model.Value;
-import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
 import org.eclipse.rdf4j.model.vocabulary.XMLSchema;
 import org.junit.Before;
 import org.junit.Rule;
@@ -102,7 +102,7 @@ public class BooleanTermParameterTest {
 
     // Assert
     assertThat(result,
-        is(SimpleValueFactory.getInstance().createLiteral("false", XMLSchema.BOOLEAN)));
+        is(VALUE_FACTORY.createLiteral("false", XMLSchema.BOOLEAN)));
   }
 
 }

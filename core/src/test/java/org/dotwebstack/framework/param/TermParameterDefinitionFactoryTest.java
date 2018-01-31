@@ -232,10 +232,6 @@ public class TermParameterDefinitionFactoryTest {
     Collection<Literal> in = result.getShaclShape().getIn();
     assertThat(in, containsInAnyOrder(VALUE_FACTORY.createLiteral("Nunspeet"),
         VALUE_FACTORY.createLiteral("Apeldoorn"), VALUE_FACTORY.createLiteral("Veenendaal")));
-
-    // XXX (PvH) Waarom doe je deze asserts? Handelt containsInAnyOrder dit niet af
-    assertThat(in.contains(VALUE_FACTORY.createLiteral("Amersfoort")), is(false));
-    assertThat(in.contains(VALUE_FACTORY.createLiteral("Houten")), is(false));
   }
 
 }
