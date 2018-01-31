@@ -49,7 +49,7 @@ public class ValidationReport {
   }
 
   public boolean isValid() {
-    return errors.size() > 0 ? false : true;
+    return errors.isEmpty();
   }
 
   private Violation createErrorObject(Model model, Resource subject) {
@@ -70,7 +70,7 @@ public class ValidationReport {
     report.append("-------------------------\n");
     report.append("*** Found [" + errors.size() + "] errors\n");
     for (Violation violation : errors.values()) {
-      report.append(violation.getReport() + "\n");
+      report.append(violation.getReport()).append("\n");
     }
     report.append("--- ---");
     return report.toString();

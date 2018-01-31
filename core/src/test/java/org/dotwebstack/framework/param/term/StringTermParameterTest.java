@@ -117,15 +117,17 @@ public class StringTermParameterTest {
     BindableParameter<String> parameter = new StringTermParameter(DBEERPEDIA.PLACE_PARAMETER_ID,
         DBEERPEDIA.PLACE_PARAMETER_VALUE_STRING, false, null, acceptedValues);
 
+    String place = "Amersfoort";
     Map<String, String> parameterValues =
-        Collections.singletonMap(DBEERPEDIA.PLACE_PARAMETER_VALUE_STRING, "Amersfoort");
+        Collections.singletonMap(DBEERPEDIA.PLACE_PARAMETER_VALUE_STRING, place);
+
+    String errorMessage = String.format("Value for parameter '%s' not an enum value: "
+            + "[Apeldoorn, Veenendaal, Nunspeet]. Supplied parameterValue: %s",
+        DBEERPEDIA.PLACE_PARAMETER_ID, place);
 
     // Assert
     thrown.expect(BackendException.class);
-    thrown.expectMessage(String.format(
-        "Value for parameter '%s' not an enum value: [Apeldoorn, Veenendaal, Nunspeet]. "
-            + "Supplied parameterValues:",
-        DBEERPEDIA.PLACE_PARAMETER_ID));
+    thrown.expectMessage(errorMessage);
 
     // Act
     parameter.handle(parameterValues);

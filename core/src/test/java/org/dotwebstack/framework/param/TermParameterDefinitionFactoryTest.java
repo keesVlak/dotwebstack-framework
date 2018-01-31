@@ -1,10 +1,8 @@
 package org.dotwebstack.framework.param;
 
-import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.hamcrest.Matchers.instanceOf;
 import static org.hamcrest.Matchers.is;
-import static org.hamcrest.core.IsNot.not;
 import static org.junit.Assert.assertThat;
 
 import java.util.Collection;
@@ -234,13 +232,12 @@ public class TermParameterDefinitionFactoryTest {
 
     // Assert
     Collection<Literal> in = result.getShaclShape().getIn();
-    System.out.println(in);
     assertThat(result, instanceOf(TermParameterDefinition.class));
     assertThat(in, containsInAnyOrder(VALUE_FACTORY.createLiteral("Nunspeet"),
         VALUE_FACTORY.createLiteral("Apeldoorn"), VALUE_FACTORY.createLiteral("Veenendaal")));
 
-    assertThat(in, not(contains(VALUE_FACTORY.createLiteral("Amersfoort"))));
-    assertThat(in, not(contains(VALUE_FACTORY.createLiteral("Houten"))));
+    assertThat(in.contains(VALUE_FACTORY.createLiteral("Amersfoort")), is(false));
+    assertThat(in.contains(VALUE_FACTORY.createLiteral("Houten")), is(false));
 
   }
 

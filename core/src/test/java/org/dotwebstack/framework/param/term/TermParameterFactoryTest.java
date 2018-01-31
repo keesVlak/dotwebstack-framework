@@ -7,10 +7,12 @@ import static org.hamcrest.Matchers.nullValue;
 import static org.junit.Assert.assertThat;
 
 import com.google.common.collect.ImmutableList;
+import java.util.Collection;
 import org.dotwebstack.framework.config.ConfigurationException;
 import org.dotwebstack.framework.param.ShaclShape;
 import org.dotwebstack.framework.test.DBEERPEDIA;
 import org.eclipse.rdf4j.model.IRI;
+import org.eclipse.rdf4j.model.Literal;
 import org.eclipse.rdf4j.model.ValueFactory;
 import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
 import org.eclipse.rdf4j.model.vocabulary.XMLSchema;
@@ -100,6 +102,25 @@ public class TermParameterFactoryTest {
     // Act
     newTermParameter(DBEERPEDIA.NAME_PARAMETER_ID, "name",
         new ShaclShape(unsupportedDataType, null, ImmutableList.of()), false);
+  }
+
+  @Test
+  public void createTermParameter_CreatesStringtermParameter_ForStringShapeWithIn() {
+    // Arrange
+    Literal nunspeet = VALUE_FACTORY.createLiteral("Nunspeet");
+    Literal apeldoorn = VALUE_FACTORY.createLiteral("Apeldoorn");
+    Literal veenendaal = VALUE_FACTORY.createLiteral("Veenendaal");
+    Collection<Literal> in = ImmutableList.of(nunspeet, apeldoorn, veenendaal);
+    ShaclShape shape = new ShaclShape(XMLSchema.STRING, null, in);
+
+    // Act
+    TermParameter result = newTermParameter(DBEERPEDIA.NAME_PARAMETER_ID, "name", shape, false);
+
+    // Assert
+    assertThat(result, instanceOf(StringTermParameter.class));
+    assertThat(result.getDefaultValue(), is(nullValue()));
+    assertThat(result.isRequired(), is(false));
+    assertThat(result.getIn(), is(ImmutableList.of(nunspeet, apeldoorn, veenendaal)));
   }
 
 }

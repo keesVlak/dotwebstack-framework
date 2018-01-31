@@ -1,17 +1,22 @@
 package org.dotwebstack.framework.param;
 
+import static lombok.AccessLevel.PACKAGE;
+import static lombok.AccessLevel.PRIVATE;
 import static org.dotwebstack.framework.param.term.TermParameterFactory.newTermParameter;
 
-import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NonNull;
+import lombok.experimental.FieldDefaults;
+import lombok.extern.slf4j.Slf4j;
 import org.dotwebstack.framework.param.term.TermParameter;
 import org.eclipse.rdf4j.model.IRI;
 
+@Slf4j
+@FieldDefaults(makeFinal = true, level = PRIVATE)
+@Getter(PACKAGE)
 public final class TermParameterDefinition extends AbstractParameterDefinition<TermParameter<?>> {
 
-  @Getter(AccessLevel.PACKAGE)
-  private final ShaclShape shaclShape;
+  ShaclShape shaclShape;
 
   public TermParameterDefinition(@NonNull IRI identifier, @NonNull String name,
       @NonNull ShaclShape shaclShape) {

@@ -363,6 +363,12 @@ elmo-shape:URIParameterPropertyShape a sh:NodeShape;
     sh:datatype xsd:string;
     sh:maxCount 1;
   ];
+  sh:property [
+    sh:path sh:in;
+    sh:name "sh:in";
+    sh:datatype xsd:string;
+    sh:maxCount 100;
+  ];
 .
 
 elmo-shape:StringParameterPropertyShape a sh:NodeShape;
@@ -401,6 +407,12 @@ elmo-shape:StringParameterPropertyShape a sh:NodeShape;
     sh:datatype xsd:integer;
     sh:maxCount 1;
   ];
+  sh:property [
+    sh:path sh:in;
+    sh:name "sh:in";
+    sh:datatype xsd:string;
+    sh:maxCount 100;
+  ];
 .
 
 elmo-shape:IntegerParameterPropertyShape a sh:NodeShape;
@@ -432,6 +444,12 @@ elmo-shape:IntegerParameterPropertyShape a sh:NodeShape;
     sh:name "sh:maxInclusive";
     sh:datatype xsd:integer;
     sh:maxCount 1;
+  ];
+  sh:property [
+    sh:path sh:in;
+    sh:name "sh:in";
+    sh:datatype xsd:string;
+    sh:maxCount 100;
   ];
 .
 

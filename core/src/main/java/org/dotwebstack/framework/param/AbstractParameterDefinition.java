@@ -1,20 +1,23 @@
 package org.dotwebstack.framework.param;
 
-import lombok.AccessLevel;
+import static lombok.AccessLevel.PRIVATE;
+import static lombok.AccessLevel.PROTECTED;
+
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
 import org.eclipse.rdf4j.model.IRI;
 
-@RequiredArgsConstructor(access = AccessLevel.PROTECTED)
+@RequiredArgsConstructor(access = PROTECTED)
+@FieldDefaults(makeFinal = true, level = PRIVATE)
+@Getter
 public abstract class AbstractParameterDefinition<T extends Parameter<?>>
     implements ParameterDefinition<T> {
 
   @NonNull
-  @Getter
-  private final IRI identifier;
+  IRI identifier;
   @NonNull
-  @Getter
-  private final String name;
+  String name;
 
 }
