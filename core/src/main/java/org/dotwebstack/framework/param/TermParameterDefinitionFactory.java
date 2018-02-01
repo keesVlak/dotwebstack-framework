@@ -43,6 +43,7 @@ final class TermParameterDefinitionFactory implements ParameterDefinitionFactory
     return new TermParameterDefinition(id, name, shape);
   }
 
+  @SuppressWarnings("squid:S2275") // Not enough arguments
   private static Supplier<ConfigurationException> newConfigurationException(Object... arguments) {
     return () -> new ConfigurationException(
         String.format("No <%s> property found for <%s> of type <%s>", arguments));

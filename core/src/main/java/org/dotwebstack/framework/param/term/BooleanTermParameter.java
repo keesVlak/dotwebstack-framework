@@ -8,11 +8,7 @@ import org.eclipse.rdf4j.model.Literal;
 public class BooleanTermParameter extends TermParameter<Boolean> {
 
   BooleanTermParameter(IRI identifier, String name, boolean required) {
-    this(identifier, name, required, null);
-  }
-
-  BooleanTermParameter(IRI identifier, String name, boolean required, Boolean defaultValue) {
-    this(identifier, name, required, defaultValue, ImmutableList.of());
+    this(identifier, name, required, null, ImmutableList.of());
   }
 
   BooleanTermParameter(IRI identifier, String name, boolean required, Boolean defaultValue,

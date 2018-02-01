@@ -5,6 +5,7 @@ import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertThat;
 
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import java.util.Collections;
 import java.util.Map;
@@ -46,7 +47,7 @@ public class IntegerTermParameterTest {
     Integer defaultValue = 3;
 
     BindableParameter<Integer> parameter =
-        new IntegerTermParameter(identifier, "test", false, defaultValue);
+        new IntegerTermParameter(identifier, "test", false, defaultValue, ImmutableList.of());
 
     Map<String, String> parameterValues = Collections.singletonMap("test", null);
 

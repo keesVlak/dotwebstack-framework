@@ -2,13 +2,11 @@ package org.dotwebstack.framework.param.term;
 
 import static java.util.stream.Collectors.joining;
 import static lombok.AccessLevel.NONE;
-import static lombok.AccessLevel.PRIVATE;
 
 import java.util.Collection;
 import java.util.Map;
 import lombok.Getter;
 import lombok.NonNull;
-import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.dotwebstack.framework.backend.BackendException;
 import org.dotwebstack.framework.param.AbstractParameter;
@@ -19,15 +17,14 @@ import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
 
 @Slf4j
 @Getter
-@FieldDefaults(makeFinal = true, level = PRIVATE)
 public abstract class TermParameter<T> extends AbstractParameter<T>
     implements BindableParameter<T> {
 
   @Getter(value = NONE)
-  protected static SimpleValueFactory VALUE_FACTORY = SimpleValueFactory.getInstance();
+  protected static final SimpleValueFactory VALUE_FACTORY = SimpleValueFactory.getInstance();
 
-  T defaultValue;
-  Collection<Literal> in;
+  private final T defaultValue;
+  private final Collection<Literal> in;
 
   protected TermParameter(@NonNull IRI identifier, @NonNull String name, boolean required,
       T defaultValue, Collection<Literal> in) {

@@ -8,11 +8,7 @@ import org.eclipse.rdf4j.model.Literal;
 public class IriTermParameter extends TermParameter<IRI> {
 
   IriTermParameter(IRI identifier, String name, boolean required) {
-    this(identifier, name, required, null);
-  }
-
-  IriTermParameter(IRI identifier, String name, boolean required, IRI defaultValue) {
-    this(identifier, name, required, defaultValue, ImmutableList.of());
+    this(identifier, name, required, null, ImmutableList.of());
   }
 
   IriTermParameter(IRI identifier, String name, boolean required, IRI defaultValue,

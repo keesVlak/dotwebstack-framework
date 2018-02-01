@@ -5,6 +5,7 @@ import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.nullValue;
 import static org.junit.Assert.assertThat;
 
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import java.util.Collections;
 import java.util.Map;
@@ -66,7 +67,7 @@ public class BooleanTermParameterTest {
     boolean defaultValue = true;
 
     BindableParameter<Boolean> parameter = new BooleanTermParameter(DBEERPEDIA.PLACE_PARAMETER_ID,
-        DBEERPEDIA.PLACE_PARAMETER_VALUE_STRING, false, defaultValue);
+        DBEERPEDIA.PLACE_PARAMETER_VALUE_STRING, false, defaultValue, ImmutableList.of());
 
     Map<String, String> parameterValues =
         Collections.singletonMap(DBEERPEDIA.PLACE_PARAMETER_VALUE_STRING, null);

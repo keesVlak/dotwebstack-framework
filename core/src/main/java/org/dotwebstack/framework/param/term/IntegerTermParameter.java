@@ -8,11 +8,7 @@ import org.eclipse.rdf4j.model.Literal;
 public class IntegerTermParameter extends TermParameter<Integer> {
 
   IntegerTermParameter(IRI identifier, String name, boolean required) {
-    this(identifier, name, required, null);
-  }
-
-  IntegerTermParameter(IRI identifier, String name, boolean required, Integer defaultValue) {
-    this(identifier, name, required, defaultValue, ImmutableList.of());
+    this(identifier, name, required, null, ImmutableList.of());
   }
 
   IntegerTermParameter(IRI identifier, String name, boolean required, Integer defaultValue,

@@ -32,9 +32,9 @@ public class StringTermParameterTest {
   @Before
   public void setUp() {
     requiredParameter = new StringTermParameter(DBEERPEDIA.NAME_PARAMETER_ID,
-        DBEERPEDIA.NAME_PARAMETER_VALUE_STRING, true, null);
+        DBEERPEDIA.NAME_PARAMETER_VALUE_STRING, true, null, ImmutableList.of());
     optionalParameter = new StringTermParameter(DBEERPEDIA.PLACE_PARAMETER_ID,
-        DBEERPEDIA.PLACE_PARAMETER_VALUE_STRING, false, null);
+        DBEERPEDIA.PLACE_PARAMETER_VALUE_STRING, false, null, ImmutableList.of());
   }
 
   @Test
@@ -69,7 +69,7 @@ public class StringTermParameterTest {
     String defaultValue = "Apeldoorn";
 
     BindableParameter<String> parameter = new StringTermParameter(DBEERPEDIA.PLACE_PARAMETER_ID,
-        DBEERPEDIA.PLACE_PARAMETER_VALUE_STRING, false, defaultValue);
+        DBEERPEDIA.PLACE_PARAMETER_VALUE_STRING, false, defaultValue, ImmutableList.of());
 
     Map<String, String> parameterValues =
         Collections.singletonMap(DBEERPEDIA.PLACE_PARAMETER_VALUE_STRING, null);

@@ -8,11 +8,7 @@ import org.eclipse.rdf4j.model.Literal;
 public class StringTermParameter extends TermParameter<String> {
 
   public StringTermParameter(IRI identifier, String name, boolean required) {
-    this(identifier, name, required, null);
-  }
-
-  StringTermParameter(IRI identifier, String name, boolean required, String defaultValue) {
-    this(identifier, name, required, defaultValue, ImmutableList.of());
+    this(identifier, name, required, null, ImmutableList.of());
   }
 
   StringTermParameter(IRI identifier, String name, boolean required, String defaultValue,

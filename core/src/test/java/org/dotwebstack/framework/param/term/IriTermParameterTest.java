@@ -69,7 +69,7 @@ public class IriTermParameterTest {
     IRI defaultValue = VALUE_FACTORY.createIRI("http://defaultValue");
 
     BindableParameter<IRI> parameter = new IriTermParameter(DBEERPEDIA.PLACE_PARAMETER_ID,
-        DBEERPEDIA.PLACE_PARAMETER_VALUE_STRING, false, defaultValue);
+        DBEERPEDIA.PLACE_PARAMETER_VALUE_STRING, false, defaultValue, ImmutableList.of());
 
     Map<String, String> parameterValues =
         Collections.singletonMap(DBEERPEDIA.PLACE_PARAMETER_VALUE_STRING, null);
