@@ -152,6 +152,25 @@ public class StringTermParameterTest {
   }
 
   @Test
+  public void handle_AcceptsKnownValue_ForEnumParameter_CaseInsensitive() {
+    // Arrange
+    List<Literal> acceptedValues = ImmutableList.of(VALUE_FACTORY.createLiteral("ApElDoOrN"),
+        VALUE_FACTORY.createLiteral("VeenEnDaal"), VALUE_FACTORY.createLiteral("nunSPEET"));
+
+    BindableParameter<String> parameter = new StringTermParameter(DBEERPEDIA.PLACE_PARAMETER_ID,
+        DBEERPEDIA.PLACE_PARAMETER_VALUE_STRING, false, null, acceptedValues);
+
+    Map<String, String> parameterValues =
+        Collections.singletonMap(DBEERPEDIA.PLACE_PARAMETER_VALUE_STRING, "veenendaal");
+
+    // Act
+    String result = parameter.handle(parameterValues);
+
+    // Assert
+    assertThat(result, is("veenendaal"));
+  }
+
+  @Test
   public void handle_AcceptsNullValue_ForOptionalEnumParameter() {
     // Arrange
     List<Literal> acceptedValues = ImmutableList.of(VALUE_FACTORY.createLiteral("Apeldoorn"),
