@@ -1,6 +1,5 @@
 package org.dotwebstack.framework.param.term;
 
-import static org.dotwebstack.framework.param.term.TermParameter.VALUE_FACTORY;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.nullValue;
 import static org.junit.Assert.assertThat;
@@ -15,6 +14,7 @@ import org.dotwebstack.framework.param.BindableParameter;
 import org.dotwebstack.framework.test.DBEERPEDIA;
 import org.eclipse.rdf4j.model.Literal;
 import org.eclipse.rdf4j.model.Value;
+import org.eclipse.rdf4j.model.ValueFactory;
 import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
 import org.junit.Before;
 import org.junit.Rule;
@@ -23,6 +23,7 @@ import org.junit.rules.ExpectedException;
 
 public class StringTermParameterTest {
 
+  private static final ValueFactory VALUE_FACTORY = SimpleValueFactory.getInstance();
   @Rule
   public ExpectedException thrown = ExpectedException.none();
 
@@ -120,7 +121,8 @@ public class StringTermParameterTest {
     Map<String, String> parameterValues =
         Collections.singletonMap(DBEERPEDIA.PLACE_PARAMETER_VALUE_STRING, place);
 
-    String errorMessage = String.format("Value for parameter '%s' not an enum value: "
+    String errorMessage = String.format(
+        "Value for parameter '%s' not an enum value: "
             + "[Apeldoorn, Veenendaal, Nunspeet]. Supplied parameterValue: %s",
         DBEERPEDIA.PLACE_PARAMETER_ID, place);
 
@@ -152,7 +154,7 @@ public class StringTermParameterTest {
   }
 
   @Test
-  public void handle_AcceptsKnownValue_ForEnumParameter_CaseInsensitive() {
+  public void handle_AcceptsKnownValue_ForEnumParameter_IgnoringCase() {
     // Arrange
     List<Literal> acceptedValues = ImmutableList.of(VALUE_FACTORY.createLiteral("ApElDoOrN"),
         VALUE_FACTORY.createLiteral("VeenEnDaal"), VALUE_FACTORY.createLiteral("nunSPEET"));

@@ -43,10 +43,10 @@ public abstract class TermParameter<T> extends AbstractParameter<T>
 
   @Override
   protected void validateInner(@NonNull Map<String, String> parameterValues) {
-    LOG.debug("Validate {} using sh:in: {}", getName(), in);
+    LOG.debug("Validating '{}' using enum values: '{}'", getName(), in);
     String value = parameterValues.get(getName());
-    if ((value != null)
-        && !in.isEmpty()
+
+    if (value != null && !in.isEmpty()
         && in.stream().map(Literal::stringValue).noneMatch(value::equalsIgnoreCase)) {
       String options = in.stream().map(Literal::stringValue).collect(joining(", "));
       throw new BackendException(String.format(

@@ -1,6 +1,5 @@
 package org.dotwebstack.framework.param.term;
 
-import static org.dotwebstack.framework.param.term.TermParameter.VALUE_FACTORY;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertThat;
@@ -20,9 +19,9 @@ import org.junit.rules.ExpectedException;
 
 public class IntegerTermParameterTest {
 
-  private IRI identifier = VALUE_FACTORY.createIRI("http://www.test.nl");
-  private IntegerTermParameter integerTermParameter = new IntegerTermParameter(identifier, "test",
-      true);
+  private IRI identifier = SimpleValueFactory.getInstance().createIRI("http://www.test.nl");
+  private IntegerTermParameter integerTermParameter =
+      new IntegerTermParameter(identifier, "test", true);
   private IntegerTermParameter integerTermParameterOptional =
       new IntegerTermParameter(identifier, "test", false);
 

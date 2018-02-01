@@ -1,6 +1,5 @@
 package org.dotwebstack.framework.param.term;
 
-import static org.dotwebstack.framework.param.term.TermParameter.VALUE_FACTORY;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.nullValue;
 import static org.junit.Assert.assertThat;
@@ -16,6 +15,8 @@ import org.dotwebstack.framework.test.DBEERPEDIA;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Literal;
 import org.eclipse.rdf4j.model.Value;
+import org.eclipse.rdf4j.model.ValueFactory;
+import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -25,6 +26,8 @@ public class IriTermParameterTest {
 
   @Rule
   public ExpectedException thrown = ExpectedException.none();
+
+  private static final ValueFactory VALUE_FACTORY = SimpleValueFactory.getInstance();
 
   private BindableParameter<IRI> requiredParameter;
   private BindableParameter<IRI> optionalParameter;
@@ -132,8 +135,8 @@ public class IriTermParameterTest {
   public void handle_ReturnsIri_ForRequiredEnumParameter() {
     // Arrange
     String iriPrefix = "http://www.kadaster.nl#";
-    List<Literal> acceptedValues = ImmutableList
-        .of(VALUE_FACTORY.createLiteral(iriPrefix + "Apeldoorn"),
+    List<Literal> acceptedValues =
+        ImmutableList.of(VALUE_FACTORY.createLiteral(iriPrefix + "Apeldoorn"),
             VALUE_FACTORY.createLiteral(iriPrefix + "Veenendaal"),
             VALUE_FACTORY.createLiteral(iriPrefix + "Nunspeet"));
 
