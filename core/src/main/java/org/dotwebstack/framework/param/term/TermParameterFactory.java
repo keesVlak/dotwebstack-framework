@@ -9,16 +9,17 @@ import com.google.common.collect.ImmutableList;
 import java.util.Collection;
 import lombok.NonNull;
 import lombok.experimental.UtilityClass;
-import lombok.extern.slf4j.Slf4j;
 import org.dotwebstack.framework.config.ConfigurationException;
 import org.dotwebstack.framework.param.ShaclShape;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Literal;
 import org.eclipse.rdf4j.model.Value;
+import org.slf4j.Logger;
 
 @UtilityClass
-@Slf4j
 public final class TermParameterFactory {
+
+  private static final Logger LOG = org.slf4j.LoggerFactory.getLogger(TermParameterFactory.class);
 
   public static TermParameter newTermParameter(@NonNull IRI identifier, @NonNull String name,
       @NonNull ShaclShape shape, boolean required) {

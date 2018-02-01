@@ -7,21 +7,21 @@ import java.util.Collection;
 import java.util.Map;
 import lombok.Getter;
 import lombok.NonNull;
-import lombok.extern.slf4j.Slf4j;
 import org.dotwebstack.framework.backend.BackendException;
 import org.dotwebstack.framework.param.AbstractParameter;
 import org.dotwebstack.framework.param.BindableParameter;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Literal;
 import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
+import org.slf4j.Logger;
 
-@Slf4j
 @Getter
 public abstract class TermParameter<T> extends AbstractParameter<T>
     implements BindableParameter<T> {
 
   @Getter(value = NONE)
   protected static final SimpleValueFactory VALUE_FACTORY = SimpleValueFactory.getInstance();
+  private static final Logger LOG = org.slf4j.LoggerFactory.getLogger(TermParameter.class);
 
   private final T defaultValue;
   private final Collection<Literal> in;
