@@ -57,7 +57,7 @@ public class FileConfigurationBackendPrefixesIntegrationTest {
     // Assert
     thrown.expect(ConfigurationException.class);
     thrown.expectMessage(
-        "Found multiple declaration <@prefix rdfs: <http://www.have-a-nice-day.com/rdf-schema#> .> at line <5>");
+        "Found second declaration of <@prefix rdfs> at line <5>");
 
     // Act
     fileConfigurationBackend.setEnvironment(environment);
