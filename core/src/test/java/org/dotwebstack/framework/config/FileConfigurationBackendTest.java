@@ -322,7 +322,7 @@ public class FileConfigurationBackendTest {
     // Assert
     thrown.expect(ConfigurationException.class);
     thrown.expectMessage(
-        "Found multiple declaration <@prefix rdfs: <http://www.have-a-nice-day.com/rdf-schema#> .> at line <5>");
+        "Found second declaration of <@prefix rdfs> at line <5>");
 
     // Act
     backend.loadResources();
