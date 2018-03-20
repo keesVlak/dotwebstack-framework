@@ -9,8 +9,6 @@ public class Stage {
 
   public static final String DEFAULT_BASE_PATH = "/";
 
-  public static final String PATH_DOMAIN_PARAMETER = "{DOMAIN_PARAMETER}";
-
   private Resource identifier;
 
   private Site site;
@@ -46,11 +44,7 @@ public class Stage {
   }
 
   public String getFullPath() {
-    if (getSite().isMatchAllDomain()) {
-      return "/" + PATH_DOMAIN_PARAMETER + getBasePath();
-    }
-
-    return "/" + getSite().getDomain() + getBasePath();
+    return DEFAULT_BASE_PATH + site.getBasePath() + basePath;
   }
 
   public Layout getLayout() {

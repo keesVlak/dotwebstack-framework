@@ -229,9 +229,8 @@ public class LdRepresentationRequestMapperTest {
     // Assert
     assertThat(httpConfiguration.getResources(), hasSize(1));
     Resource resource = (Resource) httpConfiguration.getResources().toArray()[0];
-    assertThat(resource.getPath(), equalTo("/" + Stage.PATH_DOMAIN_PARAMETER
+    assertThat(resource.getPath(), equalTo("/" + Site.PATH_DOMAIN_PARAMETER
         + DBEERPEDIA.BASE_PATH.getLabel() + DBEERPEDIA.PATH_PATTERN_VALUE));
-
   }
 
 }

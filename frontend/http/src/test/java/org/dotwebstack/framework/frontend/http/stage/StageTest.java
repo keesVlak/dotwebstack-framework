@@ -2,7 +2,6 @@ package org.dotwebstack.framework.frontend.http.stage;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.junit.Assert.assertThat;
-import static org.mockito.Mockito.when;
 
 import org.dotwebstack.framework.frontend.http.layout.Layout;
 import org.dotwebstack.framework.frontend.http.site.Site;
@@ -29,21 +28,20 @@ public class StageTest {
   @Mock
   private Site siteMock;
 
+  private Site site;
+
   private ValueFactory valueFactory = SimpleValueFactory.getInstance();
 
   @Test
   public void build_CreatesStage_WithValidData() {
-    // Act
-    Stage stage = new Stage.Builder(DBEERPEDIA.BREWERIES, siteMock).basePath(
+    // Arrange/Act
+    site = new Site.Builder(DBEERPEDIA.SITE).domain(DBEERPEDIA.NL_HOST).build();
+    Stage stage = new Stage.Builder(DBEERPEDIA.BREWERIES, site).basePath(
         DBEERPEDIA.BASE_PATH.stringValue()).layout(layout).title(DBEERPEDIA.TITLE).build();
-
-    // Arrange
-    when(siteMock.isMatchAllDomain()).thenReturn(Boolean.FALSE);
-    when(siteMock.getDomain()).thenReturn(DBEERPEDIA.NL_HOST);
 
     // Assert
     assertThat(stage.getIdentifier(), equalTo(DBEERPEDIA.BREWERIES));
-    assertThat(stage.getSite(), equalTo(siteMock));
+    assertThat(stage.getSite(), equalTo(site));
     assertThat(stage.getBasePath(), equalTo(DBEERPEDIA.BASE_PATH.stringValue()));
     assertThat(stage.getTitle(), equalTo(DBEERPEDIA.TITLE));
     assertThat(stage.getFullPath(),
@@ -53,18 +51,15 @@ public class StageTest {
   @Test
   public void build_CreatesStage_WithValidDataAndBNode() {
     // Act
+    site = new Site.Builder(DBEERPEDIA.SITE).domain(DBEERPEDIA.NL_HOST).build();
     final BNode blankNode = valueFactory.createBNode();
     Stage stage =
-        new Stage.Builder(blankNode, siteMock).basePath(DBEERPEDIA.BASE_PATH.stringValue()).layout(
+        new Stage.Builder(blankNode, site).basePath(DBEERPEDIA.BASE_PATH.stringValue()).layout(
             layout).title(DBEERPEDIA.TITLE).build();
-
-    // Arrange
-    when(siteMock.isMatchAllDomain()).thenReturn(Boolean.FALSE);
-    when(siteMock.getDomain()).thenReturn(DBEERPEDIA.NL_HOST);
 
     // Assert
     assertThat(stage.getIdentifier(), equalTo(blankNode));
-    assertThat(stage.getSite(), equalTo(siteMock));
+    assertThat(stage.getSite(), equalTo(site));
     assertThat(stage.getBasePath(), equalTo(DBEERPEDIA.BASE_PATH.stringValue()));
     assertThat(stage.getTitle(), equalTo(DBEERPEDIA.TITLE));
     assertThat(stage.getFullPath(),
@@ -74,32 +69,27 @@ public class StageTest {
   @Test
   public void build_CreatesStage_WhenMatchAllDomain() {
     // Act
-    Stage stage = new Stage.Builder(DBEERPEDIA.BREWERIES, siteMock).basePath(
+    site = new Site.Builder(DBEERPEDIA.SITE).build();
+    Stage stage = new Stage.Builder(DBEERPEDIA.BREWERIES, site).basePath(
         DBEERPEDIA.BASE_PATH.stringValue()).layout(layout).build();
-
-    // Arrange
-    when(siteMock.isMatchAllDomain()).thenReturn(Boolean.TRUE);
 
     // Assert
     assertThat(stage.getIdentifier(), equalTo(DBEERPEDIA.BREWERIES));
-    assertThat(stage.getSite(), equalTo(siteMock));
+    assertThat(stage.getSite(), equalTo(site));
     assertThat(stage.getBasePath(), equalTo(DBEERPEDIA.BASE_PATH.stringValue()));
     assertThat(stage.getFullPath(),
-        equalTo("/" + Stage.PATH_DOMAIN_PARAMETER + DBEERPEDIA.BASE_PATH.stringValue()));
+        equalTo("/" + Site.PATH_DOMAIN_PARAMETER + DBEERPEDIA.BASE_PATH.stringValue()));
   }
 
   @Test
   public void build_CreatesStageDefaults_WhenBasePathNotProvided() {
     // Act
-    Stage stage = new Stage.Builder(DBEERPEDIA.BREWERIES, siteMock).layout(layout).build();
-
-    // Arrange
-    when(siteMock.isMatchAllDomain()).thenReturn(Boolean.FALSE);
-    when(siteMock.getDomain()).thenReturn(DBEERPEDIA.NL_HOST);
+    site = new Site.Builder(DBEERPEDIA.SITE).domain(DBEERPEDIA.NL_HOST).build();
+    Stage stage = new Stage.Builder(DBEERPEDIA.BREWERIES, site).layout(layout).build();
 
     // Assert
     assertThat(stage.getIdentifier(), equalTo(DBEERPEDIA.BREWERIES));
-    assertThat(stage.getSite(), equalTo(siteMock));
+    assertThat(stage.getSite(), equalTo(site));
     assertThat(stage.getBasePath(), equalTo(Stage.DEFAULT_BASE_PATH));
     assertThat(stage.getFullPath(), equalTo("/" + DBEERPEDIA.NL_HOST + Stage.DEFAULT_BASE_PATH));
   }

@@ -37,7 +37,8 @@ public class SiteTest {
     // Assert
     assertThat(site.getIdentifier(), equalTo(DBEERPEDIA.BREWERIES));
     assertThat(site.getDomain(), equalTo(DBEERPEDIA.DOMAIN.stringValue()));
-    assertThat(site.getBasePath(), equalTo(DBEERPEDIA.BASE_PATH.stringValue()));
+    assertThat(site.getBasePath(), equalTo(DBEERPEDIA.DOMAIN.stringValue()
+        + DBEERPEDIA.BASE_PATH.stringValue()));
     assertThat(site.getLayout(), equalTo(layout));
     assertThat(site.isMatchAllDomain(), equalTo(false));
   }

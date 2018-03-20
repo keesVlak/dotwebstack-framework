@@ -6,6 +6,8 @@ import org.eclipse.rdf4j.model.Resource;
 
 public class Site {
 
+  public static final String PATH_DOMAIN_PARAMETER = "{DOMAIN_PARAMETER}";
+
   private Resource identifier;
 
   private String domain = null;
@@ -30,7 +32,11 @@ public class Site {
   }
 
   public String getBasePath() {
-    return basePath;
+    if (isMatchAllDomain()) {
+      return PATH_DOMAIN_PARAMETER + basePath;
+    }
+
+    return domain + basePath;
   }
 
   public Boolean isMatchAllDomain() {
@@ -48,7 +54,7 @@ public class Site {
     // Default is match all domain
     private String domain = null;
 
-    private String basePath;
+    private String basePath = "";
 
     private Layout layout;
 
