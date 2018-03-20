@@ -10,12 +10,15 @@ public class Site {
 
   private String domain = null;
 
+  private String basePath;
+
   private Layout layout;
 
   private Site(Builder builder) {
     this.domain = builder.domain;
     this.identifier = builder.identifier;
     this.layout = builder.layout;
+    this.basePath = builder.basePath;
   }
 
   public Resource getIdentifier() {
@@ -24,6 +27,10 @@ public class Site {
 
   public String getDomain() {
     return domain;
+  }
+
+  public String getBasePath() {
+    return basePath;
   }
 
   public Boolean isMatchAllDomain() {
@@ -41,6 +48,8 @@ public class Site {
     // Default is match all domain
     private String domain = null;
 
+    private String basePath;
+
     private Layout layout;
 
     public Builder(@NonNull Resource identifier) {
@@ -54,6 +63,11 @@ public class Site {
 
     public Site build() {
       return new Site(this);
+    }
+
+    public Builder basePath(@NonNull String basePath) {
+      this.basePath = basePath;
+      return this;
     }
 
     public Builder layout(@NonNull Layout layout) {

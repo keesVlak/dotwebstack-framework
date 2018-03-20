@@ -106,6 +106,8 @@ public class SiteResourceProviderTest {
         ImmutableList.of(
             valueFactory.createStatement(DBEERPEDIA.SITE, RDF.TYPE, ELMO.SITE,
                 DBEERPEDIA.SYSTEM_GRAPH_IRI),
+            valueFactory.createStatement(DBEERPEDIA.SITE, ELMO.STAGE_PROP, DBEERPEDIA.STAGE,
+                DBEERPEDIA.SYSTEM_GRAPH_IRI),
             valueFactory.createStatement(DBEERPEDIA.SITE, ELMO.DOMAIN, DBEERPEDIA.DOMAIN,
                 DBEERPEDIA.SYSTEM_GRAPH_IRI))));
 
