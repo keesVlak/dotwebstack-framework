@@ -56,14 +56,6 @@ public final class TransactionRequestHandler
 
   @Override
   public Response apply(@NonNull ContainerRequestContext context) {
-
-    System.out.println("************************THIS IS SPARTA!******************************");
-    System.out.println("************************THIS IS SPARTA!******************************");
-    System.out.println("************************THIS IS SPARTA!******************************");
-    System.out.println("************************THIS IS SPARTA!******************************");
-    System.out.println("************************THIS IS SPARTA!******************************");
-    System.out.println("************************THIS IS SPARTA!******************************");
-
     UriInfo uriInfo = context.getUriInfo();
     String path = uriInfo.getPath();
 
