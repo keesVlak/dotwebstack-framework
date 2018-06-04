@@ -59,6 +59,13 @@ public final class TransactionRequestHandler
     UriInfo uriInfo = context.getUriInfo();
     String path = uriInfo.getPath();
 
+    System.out.println("************************THIS IS SPARTA!******************************");
+    System.out.println("************************THIS IS SPARTA!******************************");
+    System.out.println("************************THIS IS SPARTA!******************************");
+    System.out.println("************************THIS IS SPARTA!******************************");
+    System.out.println("************************THIS IS SPARTA!******************************");
+    System.out.println("************************THIS IS SPARTA!******************************");
+
     LOG.debug("Handling {} request for path {}", context.getMethod(), path);
 
     Operation operation = apiOperation.getOperation();

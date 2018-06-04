@@ -38,6 +38,13 @@ class TransactionRequestBodyMapper {
   }
 
   Model map(@NonNull Operation operation, @NonNull RequestParameters requestParameters) {
+
+    System.out.println("************************THIS IS SPARTA!******************************");
+    System.out.println("************************THIS IS SPARTA!******************************");
+    System.out.println("************************THIS IS SPARTA!******************************");
+    System.out.println("************************THIS IS SPARTA!******************************");
+    System.out.println("************************THIS IS SPARTA!******************************");
+    System.out.println("************************THIS IS SPARTA!******************************");
     for (Parameter openApiParameter : operation.getParameters()) {
 
       if (openApiParameter instanceof BodyParameter) {
